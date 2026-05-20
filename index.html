@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./resources/css/index.css">
+    <script type="module" src="./resources/javascript/index.js"></script>
+    <title>Calls Tracker</title>
+</head>
+<body>
+    <main>        
+        <div id="card-display" class="card hide">
+            <!-- ------------------------------------------------ LOGIN ------------------------------------------------ -->
+            <div id="login-cont" class="login-cont">
+                <div class="login-bd">
+                    <div class="login-items">
+                        <input id="login-email" class="inp" type="email" name="login-email" maxlength="100" placeholder="Enter email address..." required />
+                    </div>
+                    <div class="login-items">
+                        <input id="login-password" class="inp" type="password" name="login-password" minlength="8" maxlength="30" placeholder="Enter password..." required />
+                    </div>
+                    <div class="login-items">
+                        <button id="login-submit" class="btn">Login</button>  
+                    </div>
+                    <div>
+                        <p id="login-error" class="error-message"></p>
+                    </div>
+                </div>                
+            </div>
+            <!-- ------------------------------------------------ HEADING ------------------------------------------------ -->
+            <div id="hd-cont" class="hd-cont">
+                <div id="account-hd" class="hd">
+                    ACCOUNT
+                </div>
+                <div id="calls-hd" class="hd hd-inactive">
+                    CALLS
+                </div>
+                <div id="expenses-hd" class="hd hd-inactive">
+                    EXPENSES
+                </div>
+                <div id="forecast-hd" class="hd hd-inactive">
+                    FORECAST
+                </div>
+                <div id="reports-hd" class="hd hd-inactive">
+                    REPORTS
+                </div>
+            </div>
+            <!-- ------------------------------------------------ ACCOUNT ------------------------------------------------ -->
+            <section id="account-bd" class="bd hide">
+                <h2 id="account-heading"></h2> 
+                <ul class="user-details">
+                    <li>First name: <span id="first-name-target"></span></li>
+                    <li>Last name: <span id="last-name-target"></span></li>
+                    <li>Email: <span id="email-target"></span></li>
+                </ul>
+                <div class="btn-row-user">
+                    <button id="open-edit">Update user</button>
+                <button id="open-edit-password">Update password</button>
+                <button id="logout">Logout</button>
+                </div>
+                
+            </section>
+            <!-- ------------------------------------------------ CALLS ------------------------------------------------ -->
+            <section id="calls-bd" class="bd hide">
+                <div class="btn-row">
+                    <button id="open-call-add">Add call</button><!--<button>Day</button><button>Month</button>-->
+                </div>
+                <div id="cal-cont">
+                    <div id="cal-hd">
+                        <button id="decrease-call-date" class="arrow"><</button><input id="get-call-date" class="inp cal-inp" name="get-call-date" type="date" /><button id="increase-call-date" class="arrow">></button>
+                    </div>
+                    <div id="cal-bd">
+                        <div id="call-container" class="call-item-cont"></div>
+                        <div class="cal-col-left">
+                            <div class="cal-time-cont">08:00</div><div class="cal-time-cont">09:00</div><div class="cal-time-cont">10:00</div><div class="cal-time-cont">11:00</div><div class="cal-time-cont">12:00</div><div class="cal-time-cont">13:00</div><div class="cal-time-cont">14:00</div><div class="cal-time-cont">15:00</div><div class="cal-time-cont">16:00</div><div class="cal-time-cont">17:00</div><div class="cal-time-cont">18:00</div><div class="cal-time-cont">19:00</div><div class="cal-time-cont">20:00</div><div class="cal-time-cont">21:00</div><div class="cal-time-cont">22:00</div>
+                        </div>
+                        <div class="cal-col-right">
+                            <div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div><div class="cal-line"></div><div class="cal-empty"></div>
+                        </div>
+                    </div>
+                </div>
+                <div ></div>
+            </section>
+            <!-- ------------------------------------------------ EXPENSES ------------------------------------------------ -->
+            <section id="expenses-bd" class="bd hide">
+                <h2>Expenses</h2> 
+            </section>
+            <!-- ------------------------------------------------ FORECAST ------------------------------------------------ -->
+            <section id="forecast-bd" class="bd hide">
+                <div class="forecast-hd">
+                    <h2>Yearly Forecast</h2> 
+                </div>
+                <div class="forecast-inp">
+                    <button id="decrease-forecast-year" class="arrow"><</button><div id="forecast-year" class="inp-style"></div><button id="increase-forecast-year" class="arrow">></button>
+                </div>
+                <div class="forecast-inp">
+                    <button id="decrease-year-hol" class="arrow">-</button><div id="forecast-year-hol" class="inp-style inp-hol"></div><button id="increase-year-hol" class="arrow">+</button>
+                </div>
+                <div class="forecast-item-cont">
+                    <div class="forecast-item">
+                        <span class="forecast-title">YTD total</span>
+                        <span id="year-tot" class="forecast-value">£0.00</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="forecast-title">YTD daily average</span>
+                        <span id="year-av" class="forecast-value">£0.00</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="forecast-title">Year required daily average</span>
+                        <span id="year-req" class="forecast-value">£0.00</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="forecast-title">Year projection</span>
+                        <span id="year-pro" class="forecast-value">£0.00</span>
+                    </div>
+                </div>
+                <div class="forecast-hd">
+                    <h2>Monthly Forecast</h2> 
+                </div>
+                <div class="forecast-inp">
+                    <button id="decrease-forecast-month" class="arrow"><</button><div id="forecast-month" class="inp-style"></div><button id="increase-forecast-month" class="arrow">></button>
+                </div>
+                <div class="forecast-inp">
+                    <button id="decrease-forecast-hol" class="arrow">-</button><div id="forecast-hol" class="inp-style inp-hol"></div><button id="increase-forecast-hol" class="arrow">+</button>
+                </div>
+                <div class="forecast-item-cont">
+                    <div class="forecast-item">
+                        <span class="forecast-title">MTD total</span>
+                        <span id="month-tot" class="forecast-value">£0.00</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="forecast-title">MTD daily average</span>
+                        <span id="month-av" class="forecast-value">£0.00</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="forecast-title">Month required daily average</span>
+                        <span id="month-req" class="forecast-value">£0.00</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="forecast-title">Month projection</span>
+                        <span id="month-pro" class="forecast-value">£0.00</span>
+                    </div>
+                </div>
+            </section>
+            <!-- ------------------------------------------------ REPORTS ------------------------------------------------ -->
+            <section id="reports-bd" class="bd hide">
+                <div class="unsub-cont">
+                    <div>
+                        Unsubmitted calls: <span id="unsub-tot">0</span>
+                    </div>
+                    <div id="unsub-view" class="unsub-btn hide">
+                        <button id="unsub-view-btn">View</button><button id="unsub-hide-btn" class="hide">Hide</button>
+                    </div>
+                    <div  id="unsub-cont" class="unsub-item-cont hide"></div>
+                </div>
+                
+                <div id="invoice-cont" class="inv-cont"></div>
+                <div class="tax-cont">
+                    <div class="tax-item">
+                        <div>
+                            Estimated tax
+                        </div>
+                        <div id="month-tax">
+                            £0.00
+                        </div>
+                    </div>
+                    <div class="tax-item">
+                        <div>
+                            Estimated YTD tax
+                        </div>
+                        <div  id="ytd-tax">
+                            £0.00
+                        </div>
+                    </div>
+                    <div class="tax-item">
+                        <div>
+                            Estimated total tax
+                        </div>
+                        <div id="total-tax">
+                            £0.00
+                        </div>
+                    </div>
+                </div>
+                <div class="name-cont">
+                    <ul id="name-list" class="name-list"></ul>
+                </div>
+            </section>
+            <!-- ------------------------------------------------ BACK TO THE TOP ------------------------------------------------ -->
+                <button id="top-btn" class="top-btn hide">^</button>
+        </div>        
+    </main>
+    <!-- ------------------------------------------------ EDIT USER DETAILS ------------------------------------------------ -->
+    <div id="edit-cont" class="edit hide">
+        <div id="edit-user" class="edit-cont hide">
+            <input id="edit-first-name" class="inp" name="edit-first-name" type="text" placeholder="First name..." />
+            <input id="edit-last-name" class="inp" name="edit-last-name" type="text" placeholder="Last name..." />
+            <input id="edit-email" class="inp" name="edit-email" type="email" placeholder="Email..." />
+            <div>
+                <button id="close-edit">Cancel</button>
+                <button id="submit-edit">Update</button>
+            </div>    
+            <p id="user-error" class="error-message"></p>                     
+        </div>   
+        <!-- ------------------------------------------------ EDIT USER PASSWORD ------------------------------------------------ -->
+        <div id="edit-password" class="edit-cont hide">
+            <input id="existing-password" class="inp" name="existing-password" type="password" minlength="8" maxlength="30" placeholder="Existing password..." />
+            <input id="new-password" class="inp" name="new-password" type="password" minlength="8" maxlength="30" placeholder="New password..." />
+            <div>
+                <button id="close-edit-password">Cancel</button>
+                <button id="submit-edit-password">Update</button>
+            </div>
+            <p id="password-error" class="error-message"></p>                  
+        </div>                  
+    </div>
+    <!-- ------------------------------------------------ ADD A CALL ------------------------------------------------ -->
+    <div id="call-cont" class="edit hide">
+        <div id="add-call" class="edit-cont hide">
+            <input id="add-call-name" class="inp" name="add-call-name" type="text" placeholder="Name..." required />
+            <input id="add-call-date" class="inp" name="add-call-date" type="date" required />
+            <input id="add-call-time" class="inp" name="add-call-time" type="time" min="08:00" max="21:00" required />
+            <select id="add-call-type">
+            </select>
+            <select id="add-call-submitted">
+                <option id="add-sub-optn" value="" disabled selected>Call submitted...</option>
+                <option value="true">Submitted</option>
+                <option value="false">Not submitted</option>
+            </select>
+            <input id="add-submitted-date" class="inp hide" name="add-submitted-date" type="date" required />
+            <div>
+                <button id="close-call-add">Cancel</button>
+                <button id="submit-call-add">Add call</button>
+            </div>    
+            <p id="call-add-error" class="error-message"></p>                     
+        </div>   
+        <!-- ------------------------------------------------ EDIT A CALL ------------------------------------------------ -->
+        <div id="edit-call" class="edit-cont hide">
+            <div id="confirm-delete-cont" class=" confirm-cont hide">
+                <div class="confirm-delete">
+                    <p>Are you sure you want to delete this call?</p>
+                    <div class="btn-row">
+                        <button id="confirm-delete-call" class="delete-btns">Yes</button><button id="cancel-delete-call" class="delete-btns">No</button>
+                    </div>                    
+                </div>
+            </div>
+            <input id="edit-call-name" class="inp" name="edit-call-name" type="text" placeholder="Name..." required />
+            <input id="edit-call-date" class="inp" name="edit-call-time" type="date" required />
+            <input id="edit-call-time" class="inp" name="edit-call-time" type="time" min="08:00" max="21:00" required />
+            <select id="edit-call-type">
+            </select>
+            <select id="edit-call-submitted">
+                <option id="edit-sub-optn" value="" disabled selected>Call submitted...</option>
+                <option value="true">Submitted</option>
+                <option value="false">Not submitted</option>
+            </select>
+            <input id="edit-submitted-date" class="inp hide" name="edit-submitted-date" type="date" required />
+            <div>
+                <button id="close-call-edit">Cancel</button>
+                <button id="submit-call-edit">Edit call</button>
+                <button id="delete-call">Delete</button>
+            </div>  
+            <p id="call-edit-error" class="error-message"></p>                  
+        </div>                  
+    </div>
+    
+</body>
+</html>

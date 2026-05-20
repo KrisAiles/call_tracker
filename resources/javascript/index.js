@@ -87,5 +87,6 @@ const getData = async () => {
 }
 
 getData();
+console.log(new Date());
 
 export { getData };

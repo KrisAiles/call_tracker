@@ -342,7 +342,7 @@ const handleAddCall = async () => {
         const call_type_id = addCallType.value;
         let call_submitted;
         const call_name = addCallName.value;
-        let submitted_date;
+        let get_submitted_date;
         if (verifyName(call_name)) {
             addCallName.classList.remove('error-input');
             callAddError.textContent = '';
@@ -366,13 +366,15 @@ const handleAddCall = async () => {
         }        
         if (addCallSubmitted.value === 'true') {
             call_submitted = true;
-            submitted_date = `${addSubDate.value} ${addCallTime.value}`;
+            get_submitted_date = new Date(`${addSubDate.value} ${addCallTime.value}`);
         } 
         if (addCallSubmitted.value === 'false') {
             call_submitted = false;
-            submitted_date = `${addCallDate.value} ${addCallTime.value}`;
+            get_submitted_date = new Date(`${addCallDate.value} ${addCallTime.value}`);
         } 
-        const call_time = `${addCallDate.value} ${addCallTime.value}`;
+        const submitted_date = get_submitted_date;
+        const get_call_time = new Date(`${addCallDate.value} ${addCallTime.value}`);
+        const call_time = get_call_time;
         const body = { call_type_id, call_submitted, call_name, call_time, submitted_date };
         const response = await fetch(`${siteUrl}/calls`, {
             method: "POST",
@@ -405,14 +407,14 @@ const handleUpdateCall = async () => {
         const id = currentCallId;
         const call_type_id = editCallType.value;
         let call_submitted;
-        let submitted_date;
+        let get_submitted_date;
         if (editCallSubmitted.value === 'true') {
             call_submitted = true;
-            submitted_date = `${editSubDate.value} ${editCallTime.value}`;
+            get_submitted_date = new Date(`${editSubDate.value} ${editCallTime.value}`);
         } 
         if (editCallSubmitted.value === 'false') {
             call_submitted = false;
-            submitted_date = `${editCallDate.value} ${editCallTime.value}`;
+            get_submitted_date = new Date(`${editCallDate.value} ${editCallTime.value}`);
         } 
         const call_name = editCallName.value;
         if (verifyName(call_name)) {
@@ -422,7 +424,9 @@ const handleUpdateCall = async () => {
             editCallName.classList.add('error-input');
             return callEditError.textContent = 'Invalid name.';
         }
-        const call_time = `${editCallDate.value} ${editCallTime.value}`;
+        const submitted_date = get_submitted_date;
+        const get_call_time = new Date(`${editCallDate.value} ${editCallTime.value}`);
+        const call_time = get_call_time;
         const body = { call_type_id, call_submitted, call_name, call_time, submitted_date };
         const response = await fetch(`${siteUrl}/calls/${id}`, {
             method: "PUT",

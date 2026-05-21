@@ -306,6 +306,7 @@ const generateCalls = () => {
 const generateUnsubCalls = () => {
     unsubCont.innerHTML = '';  
     unsubCallList.forEach(call => {
+        getTime(call.call_time);
         const callDiv = document.createElement('div');
         callDiv.classList.add('unsub-call-item');
         if (!call.call_submitted) callDiv.classList.add('not-submitted');

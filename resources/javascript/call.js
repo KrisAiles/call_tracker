@@ -205,9 +205,8 @@ const handleCloseCallAdd = () => {
     addCallTime.value = '';
     addSubOptn.selected = true;
     addCallName.classList.remove('error-input');
-    callAddError.textContent = '';
+    addCallTime.classList.remove('error-input');
     addCallSubmitted.classList.remove('error-input');
-    callAddError.textContent = '';
     addCallType.classList.remove('error-input');
     callAddError.textContent = '';
 }
@@ -232,6 +231,7 @@ const handleCloseCallEdit = () => {
     editSubOptn.selected = true;
     currentCallId = '';
     editCallName.classList.remove('error-input');
+    editCallTime.classList.remove('error-input');
     callEditError.textContent = '';
 }
 
@@ -272,19 +272,21 @@ const generateCalls = () => {
     callContainer.innerHTML = '';
     let callEndHour = 7;
     let callEndMinute = 30;
+    let topHeight = 0;
+    const callTimeArr = [];
     if (callList.length === 0) return;
     callList.forEach(call => {
         getTime(call.call_time);
         const minutesEnd = (callEndHour * 60) + callEndMinute;
         const minutesStart = (callHour * 60) + callMinute;
         const callGap = minutesStart - minutesEnd;
-        const emptyDivHeight = callGap * 2;
-        const emptyCallDiv = document.createElement('div');
-        emptyCallDiv.classList.add('call-item-empty');
-        emptyCallDiv.style.height = `${emptyDivHeight}px`;
-        callContainer.appendChild(emptyCallDiv);
+        topHeight = (callGap * 2) + 8;
+        const numOccurs = callTimeArr.filter(v => v === minutesStart).length;
+        if (numOccurs > 0) topHeight += (numOccurs * 16);
+        callTimeArr.push(minutesStart);
         const callDiv = document.createElement('div');
         callDiv.classList.add('call-item');
+        callDiv.style.top = `${topHeight}px`;
         if (!call.call_submitted) callDiv.classList.add('not-submitted');
         const namePara = document.createElement('span');
         namePara.textContent = call.call_name;
@@ -316,8 +318,6 @@ const generateCalls = () => {
         callDiv.appendChild(timePara);
         callDiv.appendChild(typePara);
         callContainer.appendChild(callDiv);
-        callEndHour = callHour + 1;
-        callEndMinute = callMinute;
     });
 }
 
@@ -364,6 +364,13 @@ const generateUnsubCalls = () => {
 
 const handleAddCall = async () => {
     try {
+        if (Number(addCallTime.value.split(':')[0]) < 8 || Number(addCallTime.value.split(':')[0]) > 21) {
+            addCallTime.classList.add('error-input');
+            return callAddError.textContent = 'Call start times must be between 08:00 and 21:00.';
+        } else {
+            addCallTime.classList.remove('error-input');
+            callAddError.textContent = '';
+        }
         const call_type_id = addCallType.value;
         let call_submitted;
         const call_name = addCallName.value.trim();
@@ -429,6 +436,13 @@ const handleAddCall = async () => {
 
 const handleUpdateCall = async () => {
     try {
+        if (Number(editCallTime.value.split(':')[0]) < 8 || Number(editCallTime.value.split(':')[0]) > 21) {
+            editCallTime.classList.add('error-input');
+            return callEditError.textContent = 'Call start times must be between 08:00 and 21:00.';
+        } else {
+            editCallTime.classList.remove('error-input');
+            callEditError.textContent = '';
+        }
         const id = currentCallId;
         const call_type_id = editCallType.value;
         let call_submitted;

@@ -287,6 +287,8 @@ const handleLogout = async () => {
             bdDisplay[i].classList.add('hide');
         }
 
+        const jsonData = await response.json();
+
         if (jsonData.authErrorMessage) return handleAuthError();
         
         if (jsonData.error) return passwordError.textContent = jsonData.error;

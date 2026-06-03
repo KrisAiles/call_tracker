@@ -56,7 +56,7 @@ const countUnSubCalls = async () => {
 const handleViewBtn = () => {
     unsubViewBtn.classList.add('hide');
     unsubHideBtn.classList.remove('hide');
-    if (!unsubCallList) getUnSubCalls();
+    if (unsubCallList.length === 0) getUnSubCalls();
     unsubCont.classList.remove('hide');
 }
 

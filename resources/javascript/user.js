@@ -12,6 +12,9 @@ import {
 import { 
     handleAuthError 
 } from "./headings.js";
+import { 
+    handleOpenError 
+} from "./error.js";
 
 const loggedIn = localStorage.getItem("logged-in");
 let userProfile;
@@ -90,6 +93,8 @@ const getUser = async () => {
 
             if (jsonData.authErrorMessage) {
                 handleAuthError();
+            } else if (jsonData.errorMessage) {
+                handleOpenError(jsonData.errorMessage);
             } else {
                 loginCont.classList.add('hide');
                 for (let i = 0; i < bdDisplay.length; i++) {
@@ -150,6 +155,8 @@ const loginUser = async () => {
             if (jsonData.error === 'Password not recognised.') loginPassword.classList.add('error-input');
             return loginError.textContent = jsonData.error;
         }
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
         userProfile = jsonData;
         localStorage.setItem("logged-in", "true");
@@ -212,9 +219,9 @@ const updateUser = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
-        if (jsonData.error) {
-            return userError.textContent = jsonData.error;
-        }
+        if (jsonData.error) return userError.textContent = jsonData.error;
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
         
         userProfile = jsonData;
         accountHeading.textContent = `Welcome back ${userProfile.first_name}.`;
@@ -258,9 +265,9 @@ const updatePassword = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
         
-        if (jsonData.error) {
-            return passwordError.textContent = jsonData.error;
-        }
+        if (jsonData.error) return passwordError.textContent = jsonData.error;
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
         handleClosePassword();
 
@@ -279,6 +286,13 @@ const handleLogout = async () => {
         for (let i = 0; i < bdDisplay.length; i++) {
             bdDisplay[i].classList.add('hide');
         }
+
+        if (jsonData.authErrorMessage) return handleAuthError();
+        
+        if (jsonData.error) return passwordError.textContent = jsonData.error;
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
+        
         hdCont.classList.add('hide');
         loginCont.classList.remove('hide');
         cardDisplay.classList.remove('hide');

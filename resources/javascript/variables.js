@@ -102,6 +102,10 @@ const monthTax = document.getElementById('month-tax');
 const ytdTax = document.getElementById('ytd-tax');
 const totalTax = document.getElementById('total-tax');
 const topBtn = document.getElementById('top-btn');
+const errorCont = document.getElementById('error-cont');
+const errorBd = document.getElementById('error-bd');
+const errorBdMsg = document.getElementById('error-bd-msg');
+const closeError = document.getElementById('close-error');
 
 export { 
     siteUrl, cardDisplay, loginCont, loginEmail, loginPassword, loginSubmit, loginError, bdDisplay, hdDisplay, accountBd, callsBd, 
@@ -115,5 +119,5 @@ export {
     forecastHol, decreaseForecastYear, increaseForecastYear, decreaseForecastHol, increaseForecastHol, yearTot, decreaseForecastMonth, 
     increaseForecastMonth, monthTot, yearAv, yearReq, yearPro, forecastYearHol, decreaseYearHol, increaseYearHol, monthAv, monthReq, monthPro, 
     addSubDate, editSubDate, unsubTot, unsubView, unsubCont, unsubViewBtn, unsubHideBtn, nameList, invoiceCont, monthTax, ytdTax, totalTax, 
-    topBtn
+    topBtn, errorCont, errorBd, errorBdMsg, closeError
 };

@@ -16,8 +16,11 @@ import {
 import { 
     getUnSubCalls, countUnSubCalls, unsubCallList 
 } from "./reports.js";
+import { 
+    handleOpenError 
+} from "./error.js";
 
-let callList;
+let callList = [];
 let callTypes = [];
 let currentDate;
 let callHour;
@@ -26,6 +29,11 @@ let currentTime;
 let timePlusOne;
 let currentCallId;
 let displayDate;
+let previousCalltime;
+let previousCallType;
+let previousCallName;
+let previousSubmitted;
+let previousSubmittedDate;
 
 const getTime = (time) => {
     let today;
@@ -138,6 +146,8 @@ const getCallTypes = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
+
         callTypes = jsonData;
 
     } catch (error) {
@@ -244,6 +254,8 @@ const handleCallDelete = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
+
         handleCancelCallDelete();
         handleCloseCallEdit();
         getCallsByDate();
@@ -259,7 +271,8 @@ const handleCallDelete = async () => {
 const generateCalls = () => {
     callContainer.innerHTML = '';
     let callEndHour = 7;
-    let callEndMinute = 30;    
+    let callEndMinute = 30;
+    if (callList.length === 0) return;
     callList.forEach(call => {
         getTime(call.call_time);
         const minutesEnd = (callEndHour * 60) + callEndMinute;
@@ -280,6 +293,11 @@ const generateCalls = () => {
         const typePara = document.createElement('span');
         typePara.textContent = call.call_type;
         callDiv.addEventListener('click', () => {
+            previousCalltime = call.call_time;
+            previousCallType = call.call_type_id;
+            previousCallName = call.call_name;
+            previousSubmitted = call.call_submitted;
+            previousSubmittedDate = call.submitted_date;
             currentCallId = call.call_info_id;
             getTime(call.call_time);
             generateCallTypes(editCallType, call.call_type_id);
@@ -304,7 +322,8 @@ const generateCalls = () => {
 }
 
 const generateUnsubCalls = () => {
-    unsubCont.innerHTML = '';  
+    unsubCont.innerHTML = '';
+    if (unsubCallList.length === 0) return;
     unsubCallList.forEach(call => {
         getTime(call.call_time);
         const callDiv = document.createElement('div');
@@ -317,6 +336,11 @@ const generateUnsubCalls = () => {
         const typePara = document.createElement('span');
         typePara.textContent = call.call_type;
         callDiv.addEventListener('click', () => {
+            previousCalltime = call.call_time;
+            previousCallType = call.call_type_id;
+            previousCallName = call.call_name;
+            previousSubmitted = call.call_submitted;
+            previousSubmittedDate = call.submitted_date;
             currentCallId = call.call_info_id;
             getTime(call.call_time);
             generateCallTypes(editCallType, call.call_type_id);
@@ -342,7 +366,7 @@ const handleAddCall = async () => {
     try {
         const call_type_id = addCallType.value;
         let call_submitted;
-        const call_name = addCallName.value;
+        const call_name = addCallName.value.trim();
         let get_submitted_date;
         if (verifyName(call_name)) {
             addCallName.classList.remove('error-input');
@@ -388,9 +412,9 @@ const handleAddCall = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
-        if (jsonData.error) {
-            return callAddError.textContent = jsonData.error;
-        }
+        if (jsonData.error) return callAddError.textContent = jsonData.error;
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
         handleCloseCallAdd();
         getCallsByDate();
@@ -417,7 +441,7 @@ const handleUpdateCall = async () => {
             call_submitted = false;
             get_submitted_date = new Date(`${editCallDate.value} ${editCallTime.value}`);
         } 
-        const call_name = editCallName.value;
+        const call_name = editCallName.value.trim();
         if (verifyName(call_name)) {
             editCallName.classList.remove('error-input');
             callEditError.textContent = '';
@@ -428,6 +452,9 @@ const handleUpdateCall = async () => {
         const submitted_date = get_submitted_date;
         const get_call_time = new Date(`${editCallDate.value} ${editCallTime.value}`);
         const call_time = get_call_time;
+        const prevCallTime = new Date(previousCalltime);
+        const prevSubDate = new Date(previousSubmittedDate);
+        if (prevCallTime.getTime() === call_time.getTime() && previousCallType === call_type_id && previousCallName === call_name && previousSubmitted === call_submitted && prevSubDate.getTime() === submitted_date.getTime()) return handleCloseCallEdit();
         const body = { call_type_id, call_submitted, call_name, call_time, submitted_date };
         const response = await fetch(`${siteUrl}/calls/${id}`, {
             method: "PUT",
@@ -440,9 +467,9 @@ const handleUpdateCall = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
-        if (jsonData.error) {
-            return callEditError.textContent = jsonData.error;
-        }
+        if (jsonData.error) return callEditError.textContent = jsonData.error;
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
         handleCloseCallEdit();
         getCallsByDate();
@@ -472,9 +499,9 @@ const getCallsByDate = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
-        if (jsonData.error) {
-            return console.log(jsonData.error);
-        }
+        if (jsonData.error) return console.log(jsonData.error);
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
         callList = jsonData;
         generateCalls();
@@ -502,9 +529,9 @@ const getTodaysCalls = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
-        if (jsonData.error) {
-            return console.log(jsonData.error);
-        }
+        if (jsonData.error) return console.log(jsonData.error);
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
         callList = jsonData;
         generateCalls();

@@ -494,6 +494,7 @@ button:hover {
 }
 
 .error-message {
+    text-align: center;
     color: red;
 }
 

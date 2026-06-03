@@ -13,10 +13,13 @@ import {
 import { 
     forecastMonthArr, projection 
 } from "./forecast.js";
+import { 
+    handleOpenError 
+} from "./error.js";
 
-let monthCallList;
+let monthCallList = [];
 let unsubCallsTot = 0;
-let unsubCallList;
+let unsubCallList = [];
 
 const countUnSubCalls = async () => {
     try {
@@ -31,9 +34,9 @@ const countUnSubCalls = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
-        if (jsonData.error) {
-            return console.log(jsonData.error);
-        }
+        if (jsonData.error) return console.log(jsonData.error);
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
         unsubCallsTot = jsonData;
         unsubTot.textContent = jsonData;
@@ -76,9 +79,9 @@ const getUnSubCalls = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
-        if (jsonData.error) {
-            return console.log(jsonData.error);
-        }
+        if (jsonData.error) return console.log(jsonData.error);
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
         unsubCallList = jsonData;
         generateUnsubCalls();
@@ -91,6 +94,7 @@ const getUnSubCalls = async () => {
 const renderInvoice = () => {
     invoiceCont.innerHTML = '';
     let invoiceTotal = 0;
+    if (forecastMonthArr.length === 0) return;
     forecastMonthArr.forEach((type) => {
         const invoiceSubTotal = Math.floor((type.call_num * type.call_value) / 100);
         invoiceTotal += invoiceSubTotal;
@@ -191,6 +195,7 @@ const renderTax = () => {
 
 const generateCallList = () => {
     nameList.innerHTML = '';
+    if (monthCallList.length === 0) return;
     monthCallList.forEach((call) => {
         getTime(call.call_time);
         const listItem = document.createElement('li');
@@ -222,9 +227,9 @@ const getMonthCallList = async () => {
 
         if (jsonData.authErrorMessage) return handleAuthError();
 
-        if (jsonData.error) {
-            return console.log(jsonData.error);
-        }
+        if (jsonData.error) return console.log(jsonData.error);
+
+        if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
         monthCallList = jsonData;
         generateCallList();

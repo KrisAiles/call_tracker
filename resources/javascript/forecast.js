@@ -13,6 +13,9 @@ import {
 import { 
     renderInvoice, getMonthCallList, renderTax 
 } from "./reports.js";
+import { 
+    handleOpenError 
+} from "./error.js";
 
 let forecastYearHolInp = 25;
 let forecastHolInp = 0;
@@ -107,9 +110,9 @@ const getYtdCalls = async () => {
 
             if (jsonData.authErrorMessage) return handleAuthError();
 
-            if (jsonData.error) {
-                return console.log(jsonData.error);
-            }
+            if (jsonData.error) return console.log(jsonData.error);
+
+            if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
             const forecastCallObj = {
                 call_num: jsonData,
@@ -154,9 +157,9 @@ const getMtdCalls = async () => {
 
             if (jsonData.authErrorMessage) return handleAuthError();
 
-            if (jsonData.error) {
-                return console.log(jsonData.error);
-            }
+            if (jsonData.error) return console.log(jsonData.error);
+
+            if (jsonData.errorMessage) return handleOpenError(jsonData.errorMessage);
 
             const forecastCallObj = {
                 call_num: jsonData,
@@ -179,15 +182,15 @@ const renderYTD = () => {
         ytdTotal += call.call_num * call.call_value;
     })
     YTD = ytdTotal / 100;
-    const workingDaysAfterHol = tWD - forecastYearHolInp;
-    const yearTotal = ytdTotal / 100;
-    const yearAverage = yearTotal / wDTD;
+    const workingDaysAfterHol = Math.max(0, (tWD - forecastYearHolInp));
+    const yearTotal = Math.max(0, (ytdTotal / 100));
+    const yearAverage = yearTotal / Math.max(1, wDTD);
     let yearRequired;
     if (tWD === wDTD) {
         yearRequired = 0;
     } else {
-        yearRequired = (66000 - yearTotal) / (workingDaysAfterHol - wDTD);
-    }    
+        yearRequired = Math.max(0, (66000 - yearTotal)) / Math.max(1, (workingDaysAfterHol - wDTD));
+    }
     const yearProjection = yearAverage * workingDaysAfterHol;
     projection = yearProjection;
     yearTot.textContent = `£${Math.floor(yearTotal)}.00`;
@@ -202,23 +205,23 @@ const renderMTD = () => {
     forecastMonthArr.forEach((call) => {
         mtdTotal += call.call_num * call.call_value;
     })
-    const workingDaysAfterHol = mTWD - forecastHolInp;
-    const monthTotal = mtdTotal / 100;
-    const monthAverage = monthTotal / mWDTD;
-    const previousMonths = YTD - monthTotal;
+    const workingDaysAfterHol = Math.max(0, (mTWD - forecastHolInp));
+    const monthTotal = Math.max(0, (mtdTotal / 100));
+    const monthAverage = monthTotal / Math.max(1, mWDTD);
+    const previousMonths = Math.max(0, (YTD - monthTotal));
     let monthsLeft;
     if (monthArrIndex < 3) {
         monthsLeft = (3 - (monthArrIndex + 1)) + 1;
     } else {
         monthsLeft = ((11 - monthArrIndex) + 3) + 1;
     }
-    const target = Math.floor((66000 - previousMonths) / monthsLeft);
+    const target = Math.max(0, (Math.floor((66000 - previousMonths) / monthsLeft)));
     let monthRequired;
     if (mTWD === mWDTD) {
         monthRequired = 0;
     } else {
-        monthRequired = (target - monthTotal) / (workingDaysAfterHol - mWDTD);
-    }    
+         monthRequired = Math.max(0, (target - monthTotal)) / Math.max(1, (workingDaysAfterHol - mWDTD));
+    }
     const monthProjection = monthAverage * workingDaysAfterHol;
     monthTot.textContent = `£${Math.floor(monthTotal)}.00`;
     monthAv.textContent = `£${Math.floor(monthAverage)}.00`;

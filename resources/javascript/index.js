@@ -3,7 +3,7 @@ import {
     expensesHd, forecastHd, reportsHd, closeCallAdd, openCallAdd, closeCallEdit, submitCallEdit, submitCallAdd, deleteCall, getCallDate, 
     decreaseCallDate, increaseCallDate, confirmDeleteCall, cancelDeleteCall, decreaseForecastYear, increaseForecastYear, decreaseForecastHol, 
     increaseForecastHol, decreaseForecastMonth, increaseForecastMonth, decreaseYearHol, increaseYearHol, addCallSubmitted, editCallSubmitted, 
-    editCallDate, addCallDate, unsubViewBtn, unsubHideBtn, topBtn
+    editCallDate, addCallDate, unsubViewBtn, unsubHideBtn, topBtn, closeError
 } from "./variables.js";
 import { 
     userProfile, getUser, loginUser, handleOpenEdit, handleCloseEdit, updateUser, handleClosePassword, handleOpenPassword, updatePassword, 
@@ -27,6 +27,9 @@ import {
 import { 
     handleTopBtn 
 } from "./top.js";
+import { 
+    handleCloseError 
+} from "./error.js";
 
 loginSubmit.addEventListener('click', loginUser);
 //editCont.addEventListener('click', handleClickOutside);
@@ -68,6 +71,7 @@ editCallDate.addEventListener('input', handleCallEditDate);
 unsubViewBtn.addEventListener('click', handleViewBtn);
 unsubHideBtn.addEventListener('click', handleHideBtn);
 topBtn.addEventListener('click', handleTopBtn);
+closeError.addEventListener('click', handleCloseError);
 window.onscroll = function() {
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
         topBtn.classList.remove("hide");

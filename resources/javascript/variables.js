@@ -106,6 +106,7 @@ const errorCont = document.getElementById('error-cont');
 const errorBd = document.getElementById('error-bd');
 const errorBdMsg = document.getElementById('error-bd-msg');
 const closeError = document.getElementById('close-error');
+const dayTotal = document.getElementById('day-total');
 
 export { 
     siteUrl, cardDisplay, loginCont, loginEmail, loginPassword, loginSubmit, loginError, bdDisplay, hdDisplay, accountBd, callsBd, 
@@ -119,5 +120,5 @@ export {
     forecastHol, decreaseForecastYear, increaseForecastYear, decreaseForecastHol, increaseForecastHol, yearTot, decreaseForecastMonth, 
     increaseForecastMonth, monthTot, yearAv, yearReq, yearPro, forecastYearHol, decreaseYearHol, increaseYearHol, monthAv, monthReq, monthPro, 
     addSubDate, editSubDate, unsubTot, unsubView, unsubCont, unsubViewBtn, unsubHideBtn, nameList, invoiceCont, monthTax, ytdTax, totalTax, 
-    topBtn, errorCont, errorBd, errorBdMsg, closeError
+    topBtn, errorCont, errorBd, errorBdMsg, closeError, dayTotal
 };

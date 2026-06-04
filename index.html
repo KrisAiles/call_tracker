@@ -65,9 +65,12 @@
                 <div class="btn-row">
                     <button id="open-call-add">Add call</button><!--<button>Day</button><button>Month</button>-->
                 </div>
-                <div id="cal-cont">
-                    <div id="cal-hd">
-                        <button id="decrease-call-date" class="arrow"><</button><input id="get-call-date" class="inp cal-inp" name="get-call-date" type="date" /><button id="increase-call-date" class="arrow">></button>
+                <div id="cal-cont" class="cal-cont">
+                    <div id="cal-hd" class="cal-hd">
+                        <div>
+                            <button id="decrease-call-date" class="arrow"><</button><input id="get-call-date" class="inp cal-inp" name="get-call-date" type="date" /><button id="increase-call-date" class="arrow">></button>
+                        </div>                        
+                        <div id="day-total" class="inp day-total"></div>
                     </div>
                     <div id="cal-bd">
                         <div id="call-container" class="call-item-cont"></div>

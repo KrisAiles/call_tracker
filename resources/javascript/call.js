@@ -2,7 +2,7 @@ import {
     siteUrl, callCont, addCall, editCall, addCallName, addCallDate, addCallTime, 
     addCallType, addCallSubmitted, editCallName, editCallDate, editCallTime, editCallType, editCallSubmitted, 
     callContainer, editSubOptn, addSubOptn, callEditError, callAddError, getCallDate, confirmDeleteCont,
-    addSubDate, editSubDate, unsubCont
+    addSubDate, editSubDate, unsubCont, dayTotal
 } from "./variables.js";
 import { 
     handleAuthError 
@@ -273,8 +273,9 @@ const generateCalls = () => {
     let callEndHour = 7;
     let callEndMinute = 30;
     let topHeight = 0;
+    let dayTotalValue = 0;
     const callTimeArr = [];
-    if (callList.length === 0) return;
+    if (callList.length === 0) return dayTotal.textContent = `£${dayTotalValue / 100}.00`;
     callList.forEach(call => {
         getTime(call.call_time);
         const minutesEnd = (callEndHour * 60) + callEndMinute;
@@ -287,7 +288,11 @@ const generateCalls = () => {
         const callDiv = document.createElement('div');
         callDiv.classList.add('call-item');
         callDiv.style.top = `${topHeight}px`;
-        if (!call.call_submitted) callDiv.classList.add('not-submitted');
+        if (call.call_submitted) {
+            dayTotalValue += call.call_value;
+        } else {
+            callDiv.classList.add('not-submitted');
+        }
         const namePara = document.createElement('span');
         namePara.textContent = call.call_name;
         const timePara = document.createElement('span');
@@ -319,6 +324,7 @@ const generateCalls = () => {
         callDiv.appendChild(typePara);
         callContainer.appendChild(callDiv);
     });
+    dayTotal.textContent = `£${dayTotalValue / 100}.00`;
 }
 
 const generateUnsubCalls = () => {

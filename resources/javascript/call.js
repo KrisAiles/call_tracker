@@ -298,7 +298,7 @@ const generateCalls = () => {
         const timePara = document.createElement('span');
         timePara.textContent = `${currentTime} - ${timePlusOne}`;
         const typePara = document.createElement('span');
-        typePara.textContent = call.call_type;
+        typePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' ? 'AAHR' : call.call_type;
         callDiv.addEventListener('click', () => {
             previousCalltime = call.call_time;
             previousCallType = call.call_type_id;
@@ -319,9 +319,19 @@ const generateCalls = () => {
             callCont.classList.remove('hide');
             editCall.classList.remove('hide');
         })
-        callDiv.appendChild(namePara);
-        callDiv.appendChild(timePara);
-        callDiv.appendChild(typePara);
+        if (call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32') {
+            callDiv.style.height = '60px';
+            const timeTypeDiv = document.createElement('div');
+            timePara.style.marginRight = '8px';
+            timeTypeDiv.appendChild(timePara);
+            timeTypeDiv.appendChild(typePara);
+            callDiv.appendChild(namePara);
+            callDiv.appendChild(timeTypeDiv);            
+        } else {
+            callDiv.appendChild(namePara);
+            callDiv.appendChild(timePara);
+            callDiv.appendChild(typePara);
+        }        
         callContainer.appendChild(callDiv);
     });
     dayTotal.textContent = `£${dayTotalValue / 100}.00`;

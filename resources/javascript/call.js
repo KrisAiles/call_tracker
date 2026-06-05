@@ -27,6 +27,7 @@ let callHour;
 let callMinute;
 let currentTime;
 let timePlusOne;
+let timePlusHalf;
 let currentCallId;
 let displayDate;
 let previousCalltime;
@@ -83,6 +84,16 @@ const getTime = (time) => {
     }
     currentTime = `${currentHour}:${currentMinute}`;
     timePlusOne = `${hourPlusOne}:${currentMinute}`;
+    let hourPlusHalf = today.getHours();
+    let minsPlusHalf = today.getMinutes();
+    minsPlusHalf += 30;
+    if (minsPlusHalf > 59) {
+        minsPlusHalf -= 60;
+        hourPlusHalf += 1;
+    } 
+    hourPlusHalf = hourPlusHalf < 10 ? `0${hourPlusHalf}` : String(hourPlusHalf);
+    minsPlusHalf = minsPlusHalf < 10 ? `0${minsPlusHalf}` : String(minsPlusHalf);
+    timePlusHalf = `${hourPlusHalf}:${minsPlusHalf}`;
 }
 
 const decreaseDate = () => {
@@ -296,7 +307,7 @@ const generateCalls = () => {
         const namePara = document.createElement('span');
         namePara.textContent = call.call_name;
         const timePara = document.createElement('span');
-        timePara.textContent = `${currentTime} - ${timePlusOne}`;
+        timePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' ? `${currentTime} - ${timePlusHalf}` : `${currentTime} - ${timePlusOne}`;
         const typePara = document.createElement('span');
         typePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' ? 'AAHR' : call.call_type;
         callDiv.addEventListener('click', () => {
@@ -348,7 +359,7 @@ const generateUnsubCalls = () => {
         const namePara = document.createElement('span');
         namePara.textContent = call.call_name;
         const timePara = document.createElement('span');
-        timePara.textContent = `${currentTime} - ${timePlusOne}`;
+        timePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' ? `${currentTime} - ${timePlusHalf}` : `${currentTime} - ${timePlusOne}`;
         const typePara = document.createElement('span');
         typePara.textContent = call.call_type;
         callDiv.addEventListener('click', () => {

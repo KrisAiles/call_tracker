@@ -307,7 +307,7 @@ const generateCalls = () => {
         const namePara = document.createElement('span');
         namePara.textContent = call.call_name;
         const timePara = document.createElement('span');
-        timePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' ? `${currentTime} - ${timePlusHalf}` : `${currentTime} - ${timePlusOne}`;
+        timePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' || call.call_type_id === 'f5ecf514-6217-4ddf-845a-3ab85a829300' ? `${currentTime} - ${timePlusHalf}` : `${currentTime} - ${timePlusOne}`;
         const typePara = document.createElement('span');
         typePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' ? 'AAHR' : call.call_type;
         callDiv.addEventListener('click', () => {
@@ -330,7 +330,7 @@ const generateCalls = () => {
             callCont.classList.remove('hide');
             editCall.classList.remove('hide');
         })
-        if (call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32') {
+        if (call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' || call.call_type_id === 'f5ecf514-6217-4ddf-845a-3ab85a829300') {
             callDiv.style.height = '60px';
             const timeTypeDiv = document.createElement('div');
             timePara.style.marginRight = '8px';
@@ -359,7 +359,7 @@ const generateUnsubCalls = () => {
         const namePara = document.createElement('span');
         namePara.textContent = call.call_name;
         const timePara = document.createElement('span');
-        timePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' ? `${currentTime} - ${timePlusHalf}` : `${currentTime} - ${timePlusOne}`;
+        timePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' || call.call_type_id === 'f5ecf514-6217-4ddf-845a-3ab85a829300' ? `${currentTime} - ${timePlusHalf}` : `${currentTime} - ${timePlusOne}`;
         const typePara = document.createElement('span');
         typePara.textContent = call.call_type;
         callDiv.addEventListener('click', () => {

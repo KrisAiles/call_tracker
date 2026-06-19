@@ -100,7 +100,9 @@ const getWorkingDaysMTD = () => {
     let month = date.getMonth();
     let day = date.getDate();
     if (month === monthInp && year === yearInp) {
-        mWDTD = day;
+        for (let i = 0; i < day; i++) {
+            if (new Date(year, month, i).getDay() > 0) mWDTD++;
+        }
     } else {
         mWDTD = mTWD;
     }

@@ -85,6 +85,7 @@ const getWorkingDaysMonth = () => {
     let startDay = 1;
     let month = monthArrIndex;
     if (month < 3) year = partTwo;
+
     for (let i = startDay; i < new Date(year, month + 1, 0).getDate() + 1; i++) {
         if (new Date(year, month, i).getDay() > 0) mTWD++;
     }
@@ -135,6 +136,5 @@ const increaseMonth = () => {
 }
 
 export { 
-    partOne, partTwo, monthArrIndex, monthArr, getTaxYear, decreaseYear, increaseYear, decreaseMonth, increaseMonth, tWD, wDTD, mTWD, mWDTD, 
-    getWorkingDaysYear, getWorkingDaysMonth 
+    partOne, partTwo, monthArrIndex, monthArr, getTaxYear, decreaseYear, increaseYear, decreaseMonth, increaseMonth, tWD, wDTD, mTWD, mWDTD
 }

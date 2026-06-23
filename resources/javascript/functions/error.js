@@ -1,6 +1,6 @@
 import { 
     errorCont, errorBd, errorBdMsg
-} from "./variables.js";
+} from "../variables/variables.js";
 
 const handleOpenError = (msg) => {
     errorBdMsg.textContent = msg;

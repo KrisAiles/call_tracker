@@ -1,4 +1,4 @@
-const siteUrl = 'https://server.daily-planner.uk';
+const siteUrl = 'http://localhost:3000';
 const cardDisplay = document.getElementById('card-display');
 const loginCont = document.getElementById('login-cont');
 const loginEmail = document.getElementById('login-email');
@@ -34,6 +34,7 @@ const editEmail = document.getElementById('edit-email');
 const editPassword = document.getElementById('edit-password');
 const existingPassword = document.getElementById('existing-password');
 const newPassword = document.getElementById('new-password');
+const confirmNewPassword = document.getElementById('confirm-new-password');
 const closeEditPassword = document.getElementById('close-edit-password');
 const submitEditPassword = document.getElementById('submit-edit-password');
 const logout = document.getElementById('logout');
@@ -76,8 +77,6 @@ const decreaseForecastYear = document.getElementById('decrease-forecast-year');
 const increaseForecastYear = document.getElementById('increase-forecast-year');
 const decreaseForecastMonth = document.getElementById('decrease-forecast-month');
 const increaseForecastMonth = document.getElementById('increase-forecast-month');
-const decreaseForecastHol = document.getElementById('decrease-forecast-hol');
-const increaseForecastHol = document.getElementById('increase-forecast-hol');
 const yearTot = document.getElementById('year-tot');
 const monthTot = document.getElementById('month-tot');
 const yearAv = document.getElementById('year-av');
@@ -107,6 +106,77 @@ const errorBd = document.getElementById('error-bd');
 const errorBdMsg = document.getElementById('error-bd-msg');
 const closeError = document.getElementById('close-error');
 const dayTotal = document.getElementById('day-total');
+const decreaseExpenseMonth = document.getElementById('decrease-expense-month');
+const increaseExpenseMonth = document.getElementById('increase-expense-month');
+const expenseMonth = document.getElementById('expense-month');
+const openExpenseAdd = document.getElementById('open-expense-add');
+const expenseItemCont = document.getElementById('expense-item-cont');
+const decreaseReportsMonth = document.getElementById('decrease-reports-month');
+const increaseReportsMonth = document.getElementById('increase-reports-month');
+const reportsMonth = document.getElementById('reports-month');
+const expenseYear = document.getElementById('expense-year');
+const decreaseExpenseYear = document.getElementById('decrease-expense-year');
+const increaseExpenseYear = document.getElementById('increase-expense-year');
+const reportsYear = document.getElementById('reports-year');
+const decreaseReportsYear = document.getElementById('decrease-reports-year');
+const increaseReportsYear = document.getElementById('increase-reports-year');
+const expenseCont = document.getElementById('expense-cont');
+const addExpense = document.getElementById('add-expense');
+const editExpense = document.getElementById('edit-expense');
+const addExpenseDesc = document.getElementById('add-expense-desc');
+const addExpenseDate = document.getElementById('add-expense-date');
+const addExpenseValue = document.getElementById('add-expense-value');
+const addExpenseType = document.getElementById('add-expense-type');
+const closeExpenseAdd = document.getElementById('close-expense-add');
+const submitExpenseAdd = document.getElementById('submit-expense-add');
+const editExpenseDesc = document.getElementById('edit-expense-desc');
+const editExpenseDate = document.getElementById('edit-expense-date');
+const editExpenseValue = document.getElementById('edit-expense-value');
+const editExpenseType = document.getElementById('edit-expense-type');
+const closeExpenseEdit = document.getElementById('close-expense-edit');
+const submitexpenseEdit = document.getElementById('submit-expense-edit');
+const expenseEditError = document.getElementById('expense-edit-error');
+const expenseAddError = document.getElementById('expense-add-error');
+const deleteExpense = document.getElementById('delete-expense');
+const monthTotal = document.getElementById('month-total');
+const confirmDeleteExpenseCont = document.getElementById('confirm-delete-expense-cont');
+const confirmDeleteExpense = document.getElementById('confirm-delete-expense');
+const cancelDeleteExpense = document.getElementById('cancel-delete-expense');
+const expenseSummary = document.getElementById('expense-summary');
+const expenseList = document.getElementById('expense-list');
+const loginPwShow = document.getElementById('login-pw-show');
+const loginPwHide = document.getElementById('login-pw-hide');
+const exsPwShow = document.getElementById('exs-pw-show');
+const exsPwHide = document.getElementById('exs-pw-hide');
+const newPwShow = document.getElementById('new-pw-show');
+const newPwHide = document.getElementById('new-pw-hide');
+const conPwShow = document.getElementById('con-pw-show');
+const conPwHide = document.getElementById('con-pw-hide');
+const yearHoliday = document.getElementById('year-holiday');
+const holidayYear = document.getElementById('holiday-year');
+const decreaseHolidayYear = document.getElementById('decrease-holiday-year');
+const increaseHolidayYear = document.getElementById('increase-holiday-year');
+const monthHoliday = document.getElementById('month-holiday');
+const openHolidayAdd = document.getElementById('open-holiday-add');
+const holidayItemCont = document.getElementById('holiday-item-cont');
+const holidayCont = document.getElementById('holiday-cont');
+const addHoliday = document.getElementById('add-holiday');
+const addHolidayDate = document.getElementById('add-holiday-date');
+const closeHolidayAdd = document.getElementById('close-holiday-add');
+const submitHolidayAdd = document.getElementById('submit-holiday-add');
+const editHoliday = document.getElementById('edit-holiday');
+const confirmDeleteHolidayCont = document.getElementById('confirm-delete-holiday-cont');
+const confirmDeleteHoliday = document.getElementById('confirm-delete-holiday');
+const cancelDeleteHoliday = document.getElementById('cancel-delete-holiday');
+const editHolidayDate = document.getElementById('edit-holiday-date');
+const closeHolidayEdit = document.getElementById('close-holiday-edit');
+const submitHolidayEdit = document.getElementById('submit-holiday-edit');
+const deleteHoliday = document.getElementById('delete-holiday');
+const holidayAddError = document.getElementById('holiday-add-error');
+const holidayEditError = document.getElementById('holiday-edit-error');
+const logoutCont = document.getElementById('logout-cont');
+const viewPdf = document.getElementById('view-pdf');
+const downloadPdf = document.getElementById('download-pdf');
 
 export { 
     siteUrl, cardDisplay, loginCont, loginEmail, loginPassword, loginSubmit, loginError, bdDisplay, hdDisplay, accountBd, callsBd, 
@@ -117,8 +187,17 @@ export {
     addCallType, addCallSubmitted, closeCallAdd, openCallAdd, submitCallAdd, editCallName, editCallDate, editCallTime, editCallType, 
     editCallSubmitted, closeCallEdit, submitCallEdit, addSubOptn, editSubOptn, callEditError, callAddError, deleteCall, 
     getCallDate, decreaseCallDate, increaseCallDate, confirmDeleteCall, confirmDeleteCont, cancelDeleteCall, forecastYear, forecastMonth, 
-    forecastHol, decreaseForecastYear, increaseForecastYear, decreaseForecastHol, increaseForecastHol, yearTot, decreaseForecastMonth, 
+    forecastHol, decreaseForecastYear, increaseForecastYear, yearTot, decreaseForecastMonth, 
     increaseForecastMonth, monthTot, yearAv, yearReq, yearPro, forecastYearHol, decreaseYearHol, increaseYearHol, monthAv, monthReq, monthPro, 
     addSubDate, editSubDate, unsubTot, unsubView, unsubCont, unsubViewBtn, unsubHideBtn, nameList, invoiceCont, monthTax, ytdTax, totalTax, 
-    topBtn, errorCont, errorBd, errorBdMsg, closeError, dayTotal
+    topBtn, errorCont, errorBd, errorBdMsg, closeError, dayTotal, decreaseExpenseMonth, increaseExpenseMonth, expenseMonth, openExpenseAdd, 
+    expenseItemCont, decreaseReportsMonth, increaseReportsMonth, reportsMonth, expenseYear, decreaseExpenseYear, increaseExpenseYear, 
+    reportsYear, decreaseReportsYear, increaseReportsYear, expenseCont, addExpense, editExpense, addExpenseDesc, addExpenseDate, 
+    addExpenseValue, addExpenseType, closeExpenseAdd, submitExpenseAdd, editExpenseDesc, editExpenseDate, editExpenseValue, 
+    editExpenseType, closeExpenseEdit, submitexpenseEdit, expenseEditError, expenseAddError, deleteExpense, monthTotal, confirmDeleteExpenseCont, 
+    confirmDeleteExpense, cancelDeleteExpense, expenseSummary, expenseList, loginPwShow, loginPwHide, exsPwShow, exsPwHide, newPwShow, newPwHide, 
+    conPwShow, conPwHide, confirmNewPassword, yearHoliday, holidayYear, decreaseHolidayYear, increaseHolidayYear, monthHoliday, openHolidayAdd, 
+    holidayItemCont, holidayCont, addHoliday, addHolidayDate, closeHolidayAdd, submitHolidayAdd, editHoliday, confirmDeleteHolidayCont, 
+    confirmDeleteHoliday, cancelDeleteHoliday, editHolidayDate, closeHolidayEdit, submitHolidayEdit, deleteHoliday, holidayAddError, holidayEditError, 
+    logoutCont, viewPdf, downloadPdf 
 };

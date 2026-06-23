@@ -4,27 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./resources/css/index.css">
-    <script type="module" src="./resources/javascript/index.js"></script>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js" defer></script>
+    <script src="https://unpkg.com/jspdf-autotable@latest/dist/jspdf.plugin.autotable.js" defer></script>    
+    <script type="module" src="./resources/javascript/index.js" defer></script>
     <title>Calls Tracker</title>
 </head>
 <body>
+    <!-- ------------------------------------------------ HEADER ------------------------------------------------ -->
+    <header>
+        <div class="logo">
+            <img src="./resources/images/call_tracker_logo.png" alt="Logo">
+        </div>
+        <div id="logout-cont" class="logout hide">
+            <button id="logout">Logout</button>
+        </div>
+    </header>
     <main>        
         <div id="card-display" class="card hide">
             <!-- ------------------------------------------------ LOGIN ------------------------------------------------ -->
             <div id="login-cont" class="login-cont">
                 <div class="login-bd">
-                    <div class="login-items">
-                        <input id="login-email" class="inp" type="email" name="login-email" maxlength="100" placeholder="Enter email address..." required />
+                    <input id="login-email" class="inp" type="email" name="login-email" maxlength="100" placeholder="Enter email address..." required />
+                    <div class="password-cont">
+                        <input id="login-password" class="inp password-inp" type="password" name="login-password" minlength="8" maxlength="30" placeholder="Enter password..." required />
+                        <img src="./resources/images/show-password.png" id="login-pw-show" class="password-img" />
+                        <img src="./resources/images/hide-password.png" id="login-pw-hide" class="password-img hide" />
                     </div>
-                    <div class="login-items">
-                        <input id="login-password" class="inp" type="password" name="login-password" minlength="8" maxlength="30" placeholder="Enter password..." required />
-                    </div>
-                    <div class="login-items">
-                        <button id="login-submit" class="btn">Login</button>  
-                    </div>
-                    <div>
-                        <p id="login-error" class="error-message"></p>
-                    </div>
+                    <button id="login-submit" class="btn">Login</button>
+                    <p id="login-error" class="error-message"></p>
                 </div>                
             </div>
             <!-- ------------------------------------------------ HEADING ------------------------------------------------ -->
@@ -47,31 +55,56 @@
             </div>
             <!-- ------------------------------------------------ ACCOUNT ------------------------------------------------ -->
             <section id="account-bd" class="bd hide">
-                <h2 id="account-heading"></h2> 
-                <ul class="user-details">
-                    <li>First name: <span id="first-name-target"></span></li>
-                    <li>Last name: <span id="last-name-target"></span></li>
-                    <li>Email: <span id="email-target"></span></li>
-                </ul>
-                <div class="btn-row-user">
-                    <button id="open-edit">Update user</button>
-                <button id="open-edit-password">Update password</button>
-                <button id="logout">Logout</button>
+                <div class="align-center">
+                    <h2 id="account-heading"></h2> 
                 </div>
-                
+                <div class="btn-row">
+                    <button id="open-edit">Update user</button>
+                    <button id="open-edit-password">Update password</button>
+                </div>
+                <div class="expense-item-cont">
+                    <div class="expense-item">
+                            <div>First name: <span id="first-name-target"></span></div>
+                            <div>Last name: <span id="last-name-target"></span></div>
+                            <div>Email: <span id="email-target"></span></div>
+                    </div>
+                </div>
+                <div class="align-center">
+                    <h2>Holiday yearly total</h2>
+                </div>                
+                <div class="align-center">
+                    <button id="decrease-holiday-year" class="arrow"><</button><div id="holiday-year" class="inp-style"></div><button id="increase-holiday-year" class="arrow">></button>
+                </div>
+                <div class="forecast-inp">
+                    <button id="decrease-year-hol" class="arrow">-</button><div id="year-holiday" class="inp-style inp-hol"></div><button id="increase-year-hol" class="arrow">+</button>
+                </div>
+                <div class="align-center">
+                    <h2>Holiday days</h2>
+                </div>  
+                <div class="align-center">
+                    <button id="open-holiday-add" class="add-expense-btn">Add holiday</button>
+                </div>
+                <div class="align-center">
+                    <div id="month-holiday" class="inp-style inp-hol"></div> 
+                </div>       
+                <div id="holiday-item-cont" class="holiday-item-cont"></div>
             </section>
             <!-- ------------------------------------------------ CALLS ------------------------------------------------ -->
             <section id="calls-bd" class="bd hide">
-                <div class="btn-row">
-                    <button id="open-call-add">Add call</button><!--<button>Day</button><button>Month</button>-->
+                <div class="align-center">
+                    <h2>Daily Calls</h2>
                 </div>
-                <div id="cal-cont" class="cal-cont">
-                    <div id="cal-hd" class="cal-hd">
+                <div class="btn-row">
+                    <button id="open-call-add">Add call</button>
+                </div>
+                <div id="cal-hd" class="cal-hd">
                         <div>
                             <button id="decrease-call-date" class="arrow"><</button><input id="get-call-date" class="inp cal-inp" name="get-call-date" type="date" /><button id="increase-call-date" class="arrow">></button>
                         </div>                        
                         <div id="day-total" class="inp day-total"></div>
                     </div>
+                <div id="cal-cont" class="cal-cont">
+                    
                     <div id="cal-bd">
                         <div id="call-container" class="call-item-cont"></div>
                         <div class="cal-col-left">
@@ -86,7 +119,22 @@
             </section>
             <!-- ------------------------------------------------ EXPENSES ------------------------------------------------ -->
             <section id="expenses-bd" class="bd hide">
-                <h2>Expenses</h2> 
+                <div class="align-center">
+                    <h2>Expenses</h2>
+                </div>
+                <div class="btn-row">
+                    <button id="open-expense-add" class="add-expense-btn">Add expense</button>
+                </div>
+                <div class="align-center">
+                    <button id="decrease-expense-year" class="arrow"><</button><div id="expense-year" class="inp-style"></div><button id="increase-expense-year" class="arrow">></button>
+                </div>
+                <div class="align-center">
+                    <button id="decrease-expense-month" class="arrow"><</button><div id="expense-month" class="inp-style"></div><button id="increase-expense-month" class="arrow">></button>
+                </div> 
+                <div class="align-center">
+                    <div id="month-total" class="inp-style month-total"></div> 
+                </div>       
+                <div id="expense-item-cont" class="expense-item-cont"></div>
             </section>
             <!-- ------------------------------------------------ FORECAST ------------------------------------------------ -->
             <section id="forecast-bd" class="bd hide">
@@ -97,7 +145,7 @@
                     <button id="decrease-forecast-year" class="arrow"><</button><div id="forecast-year" class="inp-style"></div><button id="increase-forecast-year" class="arrow">></button>
                 </div>
                 <div class="forecast-inp">
-                    <button id="decrease-year-hol" class="arrow">-</button><div id="forecast-year-hol" class="inp-style inp-hol"></div><button id="increase-year-hol" class="arrow">+</button>
+                    <div id="forecast-year-hol" class="inp-style inp-hol"></div>
                 </div>
                 <div class="forecast-item-cont">
                     <div class="forecast-item">
@@ -124,7 +172,7 @@
                     <button id="decrease-forecast-month" class="arrow"><</button><div id="forecast-month" class="inp-style"></div><button id="increase-forecast-month" class="arrow">></button>
                 </div>
                 <div class="forecast-inp">
-                    <button id="decrease-forecast-hol" class="arrow">-</button><div id="forecast-hol" class="inp-style inp-hol"></div><button id="increase-forecast-hol" class="arrow">+</button>
+                    <div id="forecast-hol" class="inp-style inp-hol"></div>
                 </div>
                 <div class="forecast-item-cont">
                     <div class="forecast-item">
@@ -147,6 +195,19 @@
             </section>
             <!-- ------------------------------------------------ REPORTS ------------------------------------------------ -->
             <section id="reports-bd" class="bd hide">
+                <div class="align-center">
+                    <h2>Reports</h2>
+                </div>
+                <div class="btn-row">
+                    <button id="view-pdf" class="btn-reports">View</button>
+                    <button id="download-pdf" class="btn-reports">Download</button>
+                </div>
+                <div class="align-center">
+                    <button id="decrease-reports-year" class="arrow"><</button><div id="reports-year" class="inp-style"></div><button id="increase-reports-year" class="arrow">></button>
+                </div>
+                <div class="align-center">
+                    <button id="decrease-reports-month" class="arrow"><</button><div id="reports-month" class="inp-style"></div><button id="increase-reports-month" class="arrow">></button>
+                </div>
                 <div class="unsub-cont">
                     <div>
                         Unsubmitted calls: <span id="unsub-tot">0</span>
@@ -155,9 +216,9 @@
                         <button id="unsub-view-btn">View</button><button id="unsub-hide-btn" class="hide">Hide</button>
                     </div>
                     <div  id="unsub-cont" class="unsub-item-cont hide"></div>
-                </div>
-                
+                </div>                
                 <div id="invoice-cont" class="inv-cont"></div>
+                <div id="expense-summary" class="inv-cont"></div>
                 <div class="tax-cont">
                     <div class="tax-item">
                         <div>
@@ -185,7 +246,12 @@
                     </div>
                 </div>
                 <div class="name-cont">
+                    <div>Call list</div>
                     <ul id="name-list" class="name-list"></ul>
+                </div>
+                <div class="name-cont">
+                    <div>Expense list</div>
+                    <ul id="expense-list" class="name-list"></ul>
                 </div>
             </section>
             <!-- ------------------------------------------------ BACK TO THE TOP ------------------------------------------------ -->
@@ -206,8 +272,21 @@
         </div>   
         <!-- ------------------------------------------------ EDIT USER PASSWORD ------------------------------------------------ -->
         <div id="edit-password" class="edit-cont hide">
-            <input id="existing-password" class="inp" name="existing-password" type="password" minlength="8" maxlength="30" placeholder="Existing password..." />
-            <input id="new-password" class="inp" name="new-password" type="password" minlength="8" maxlength="30" placeholder="New password..." />
+            <div class="password-cont">
+                <input id="existing-password" class="inp password-inp" name="existing-password" type="password" minlength="8" maxlength="30" placeholder="Existing password..." />
+                <img src="./resources/images/show-password.png" id="exs-pw-show" class="password-img" />
+                <img src="./resources/images/hide-password.png" id="exs-pw-hide" class="password-img hide" />
+            </div>
+            <div class="password-cont">
+                <input id="new-password" class="inp password-inp" name="new-password" type="password" minlength="8" maxlength="30" placeholder="New password..." />
+                <img src="./resources/images/show-password.png" id="new-pw-show" class="password-img" />
+                <img src="./resources/images/hide-password.png" id="new-pw-hide" class="password-img hide" />
+            </div>
+            <div class="password-cont">
+                <input id="confirm-new-password" class="inp password-inp" name="confirm-new-password" type="password" minlength="8" maxlength="30" placeholder="Re enter new password..." />
+                <img src="./resources/images/show-password.png" id="con-pw-show" class="password-img" />
+                <img src="./resources/images/hide-password.png" id="con-pw-hide" class="password-img hide" />
+            </div>
             <div>
                 <button id="close-edit-password">Cancel</button>
                 <button id="submit-edit-password">Update</button>
@@ -262,6 +341,72 @@
                 <button id="delete-call">Delete</button>
             </div>  
             <p id="call-edit-error" class="error-message"></p>                  
+        </div>                  
+    </div>
+    <!-- ------------------------------------------------ ADD AN EXPENSE ------------------------------------------------ -->
+    <div id="expense-cont" class="edit hide">
+        <div id="add-expense" class="edit-cont hide">
+            <input id="add-expense-desc" class="inp" name="add-expense-desc" type="text" placeholder="Description..." required />
+            <select id="add-expense-type">
+            </select>
+            <input id="add-expense-date" class="inp" name="add-expense-date" type="date" required />
+            <input id="add-expense-value" class="inp" name="add-expense-value" type="number" placeholder="0.00" step="0.01" min="0" />
+            <div>
+                <button id="close-expense-add">Cancel</button>
+                <button id="submit-expense-add">Add expense</button>
+            </div>    
+            <p id="expense-add-error" class="error-message"></p>                     
+        </div>   
+        <!-- ------------------------------------------------ EDIT AN EXPENSE ------------------------------------------------ -->
+        <div id="edit-expense" class="edit-cont hide">            
+            <input id="edit-expense-desc" class="inp" name="edit-expense-desc" type="text" placeholder="Description..." required />
+            <select id="edit-expense-type">
+            </select>
+            <input id="edit-expense-date" class="inp" name="edit-expense-date" type="date" required />
+            <input id="edit-expense-value" class="inp" name="edit-expense-value" type="number" placeholder="0.00" step="0.01" min="0" />
+            <div>
+                <button id="close-expense-edit">Cancel</button>
+                <button id="submit-expense-edit">Edit expense</button>
+                <button id="delete-expense">Delete</button>
+            </div>  
+            <p id="expense-edit-error" class="error-message"></p>
+            <div id="confirm-delete-expense-cont" class=" confirm-cont hide">
+                <div class="confirm-delete">
+                    <p>Are you sure you want to delete this expense?</p>
+                    <div class="btn-row">
+                        <button id="confirm-delete-expense" class="delete-btns">Yes</button><button id="cancel-delete-expense" class="delete-btns">No</button>
+                    </div>                    
+                </div>
+            </div>
+        </div>     
+    </div>
+    <!-- ------------------------------------------------ ADD A HOLIDAY DAY ------------------------------------------------ -->
+    <div id="holiday-cont" class="edit hide">
+        <div id="add-holiday" class="edit-cont hide">
+            <input id="add-holiday-date" class="inp" name="add-holiday-date" type="date" required />
+            <div>
+                <button id="close-holiday-add">Cancel</button>
+                <button id="submit-holiday-add">Add holiday</button>
+            </div>       
+            <p id="holiday-add-error" class="error-message"></p>             
+        </div>   
+        <!-- ------------------------------------------------ EDIT A HOLIDAY DAY ------------------------------------------------ -->
+        <div id="edit-holiday" class="edit-cont hide">            
+            <input id="edit-holiday-date" class="inp" name="edit-holiday-date" type="date" required />
+            <div>
+                <button id="close-holiday-edit">Cancel</button>
+                <button id="submit-holiday-edit">Edit expense</button>
+                <button id="delete-holiday">Delete</button>
+            </div>
+            <p id="holiday-edit-error" class="error-message"></p>
+            <div id="confirm-delete-holiday-cont" class=" confirm-cont hide">
+                <div class="confirm-delete">
+                    <p>Are you sure you want to delete this holiday day?</p>
+                    <div class="btn-row">
+                        <button id="confirm-delete-holiday" class="delete-btns">Yes</button><button id="cancel-delete-holiday" class="delete-btns">No</button>
+                    </div>                    
+                </div>
+            </div>
         </div>                  
     </div>
     <!-- ------------------------------------------------ ERROR MESSAGE ------------------------------------------------ -->

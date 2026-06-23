@@ -1,12 +1,13 @@
 import { 
-    siteUrl, unsubTot, unsubView, unsubHideBtn, unsubCont, nameList, invoiceCont, monthTax, ytdTax, totalTax, unsubViewBtn 
-} from "./variables.js";
+    siteUrl, unsubTot, unsubView, unsubHideBtn, unsubCont, nameList, invoiceCont, monthTax, ytdTax, totalTax, 
+    unsubViewBtn, expenseSummary 
+} from "../variables/variables.js";
 import { 
     handleAuthError 
-} from "./headings.js";
+} from "../functions/headings.js";
  import { 
-    partOne, partTwo, monthArrIndex, monthArr
-} from "./functions/getTaxYear.js";
+    partOne, partTwo, monthArrIndex
+} from "../functions/getTaxYear.js";
 import { 
     currentTime, displayDate, getTime, generateUnsubCalls 
 } from "./call.js";
@@ -15,7 +16,10 @@ import {
 } from "./forecast.js";
 import { 
     handleOpenError 
-} from "./error.js";
+} from "../functions/error.js";
+import { 
+    expensesTaxArr, ytdExpensesValue 
+} from "./expense.js";
 
 let monthCallList = [];
 let unsubCallsTot = 0;
@@ -136,18 +140,52 @@ const renderInvoice = () => {
     invoiceCont.appendChild(invItem);
 }
 
+const renderExpenses = () => {
+    expenseSummary.innerHTML = '';
+    let expensesTotal = 0;
+    if (expensesTaxArr.length === 0) return;
+    expensesTaxArr.forEach((type) => {
+        const invoiceSubTotal = type.expense_value / 100;
+        expensesTotal += invoiceSubTotal;
+        const invItem = document.createElement('div');
+        invItem.classList.add('inv-item');
+        const invCat = document.createElement('div');
+        invCat.classList.add('inv-cat');
+        invCat.textContent = type.expense_type;
+        const invSubItem = document.createElement('div');
+        invSubItem.classList.add('inv-sub-item');
+        const invNum = document.createElement('div');
+        invNum.classList.add('inv-num');
+        invNum.textContent = type.expense_num;
+        const invVal = document.createElement('div');
+        invVal.classList.add('inv-val');
+        invVal.textContent = `£${invoiceSubTotal.toFixed(2)}`;
+        invSubItem.appendChild(invNum);
+        invSubItem.appendChild(invVal);
+        invItem.appendChild(invCat);
+        invItem.appendChild(invSubItem);
+        expenseSummary.appendChild(invItem);
+    })
+    const invItem = document.createElement('div');
+    invItem.classList.add('inv-item');
+    const invCat = document.createElement('div');
+    invCat.classList.add('inv-cat');
+    const invSubItem = document.createElement('div');
+    invSubItem.classList.add('inv-sub-item');
+    const invNum = document.createElement('div');
+    invNum.classList.add('inv-num');
+    invNum.textContent = 'Total';
+    const invVal = document.createElement('div');
+    invVal.classList.add('inv-val');
+    invVal.textContent = `£${expensesTotal.toFixed(2)}`;
+    invSubItem.appendChild(invNum);
+    invSubItem.appendChild(invVal);
+    invItem.appendChild(invCat);
+    invItem.appendChild(invSubItem);
+    expenseSummary.appendChild(invItem);
+}
+
 const renderTax = () => {
-    const expenses = 16000;
-    const profit = projection - expenses;
-    const higherRate = projection - 50270;
-    let higherRateTax = 0;
-    if (higherRate > 0) higherRateTax = (higherRate / 100) * 42;
-    let lowerRate = 37700;
-    if (projection < 50270) lowerRate = projection - 12570;
-    let lowerRateTax = 0;
-    if (projection > 12570) lowerRateTax = (lowerRate / 100) * 26;
-    const totalTaxValue = Math.floor(higherRateTax + lowerRateTax);
-    const monthTaxValue = Math.floor(totalTaxValue / 12);
     let ytdMonth;
     switch (monthArrIndex) {
         case 0:
@@ -187,6 +225,18 @@ const renderTax = () => {
             ytdMonth = 9;
             break
     }
+    const expenses = (ytdExpensesValue / ytdMonth) * 12;
+    const profit = projection - (expenses / 100);
+    const higherRate = profit - 50270;
+    let higherRateTax = 0;
+    if (higherRate > 0) higherRateTax = (higherRate / 100) * 42;
+    let lowerRate = 37700;
+    if (profit < 50270) lowerRate = profit - 12570;
+    let lowerRateTax = 0;
+    if (profit > 12570) lowerRateTax = (lowerRate / 100) * 26;
+    const totalTaxValue = Math.floor(higherRateTax + lowerRateTax);
+    const monthTaxValue = Math.floor(totalTaxValue / 12);
+    
     const ytdTaxValue = Math.floor((totalTaxValue / 12) * ytdMonth);
     monthTax.textContent = `£${monthTaxValue}.00`;
     ytdTax.textContent = `£${ytdTaxValue}.00`;
@@ -239,4 +289,4 @@ const getMonthCallList = async () => {
     }
 }
 
-export { getUnSubCalls, countUnSubCalls, getMonthCallList, renderInvoice, renderTax, unsubCallList, handleViewBtn, handleHideBtn }
+export { getUnSubCalls, countUnSubCalls, getMonthCallList, renderInvoice, renderExpenses, renderTax, unsubCallList, handleViewBtn, handleHideBtn, monthCallList }

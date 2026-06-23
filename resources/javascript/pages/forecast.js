@@ -1,23 +1,29 @@
 import { 
-    siteUrl, forecastYear, forecastMonth, forecastHol, yearTot, monthTot, yearAv, yearReq, yearPro, forecastYearHol, monthAv, monthReq, monthPro
- } from "./variables.js";
+    siteUrl, forecastYear, forecastMonth, forecastHol, yearTot, monthTot, yearAv, yearReq, yearPro, monthAv, monthReq, 
+    monthPro, expenseMonth, reportsMonth, expenseYear, reportsYear, holidayYear
+ } from "../variables/variables.js";
  import { 
     partOne, partTwo, monthArrIndex, monthArr, getTaxYear, decreaseYear, increaseYear, decreaseMonth, increaseMonth, tWD, wDTD, mTWD, mWDTD 
-} from "./functions/getTaxYear.js";
+} from "../functions/getTaxYear.js";
 import { 
     callTypes, getCallTypes 
 } from "./call.js";
 import { 
     handleAuthError 
-} from "./headings.js";
+} from "../functions/headings.js";
 import { 
-    renderInvoice, getMonthCallList, renderTax 
+    renderInvoice, getMonthCallList
 } from "./reports.js";
 import { 
     handleOpenError 
-} from "./error.js";
+} from "../functions/error.js";
+import { 
+    getMonthExpenses
+} from "./expense.js";
+import { 
+    yearHolidayTotal, getYearHoliday, getHolidayDays, getMonthHolidayTotal, monthHolidayTotal
+} from "./user.js";
 
-let forecastYearHolInp = 25;
 let forecastHolInp = 0;
 let forecastYearArr = [];
 let forecastMonthArr = [];
@@ -26,59 +32,51 @@ let projection;
 
 const setTaxYear = () => {
     getTaxYear();
-    forecastYear.textContent = `${partOne} / ${partTwo}`;
+    setYear();
     forecastMonth.textContent = monthArr[monthArrIndex];
-    forecastYearHol.textContent = forecastYearHolInp;
-    forecastHol.textContent = forecastHolInp;
+    expenseMonth.textContent = monthArr[monthArrIndex];
+    reportsMonth.textContent = monthArr[monthArrIndex];
 }
 
 const decreaseTaxYear = () => {
     decreaseYear();
-    forecastYear.textContent = `${partOne} / ${partTwo}`;
-    getYtdCalls();
+    setYear();
+    getYearHoliday();
+    getHolidayDays();
+    getYtdCalls();    
 }
 
 const increaseTaxYear = () => {
     increaseYear();
-    forecastYear.textContent = `${partOne} / ${partTwo}`;
+    setYear();
+    getYearHoliday();
+    getHolidayDays();
     getYtdCalls();
 }
 
-const increaseYearHoliday = () => {
-    forecastYearHolInp++;
-    forecastYearHol.textContent = forecastYearHolInp;
-    renderYTD();
-}
-
-const decreaseYearHoliday = () => {
-    if (forecastYearHolInp <= 0) return;
-    forecastYearHolInp--;
-    forecastYearHol.textContent = forecastYearHolInp;
-    renderYTD();
-}
-
-const increaseHoliday = () => {
-    forecastHolInp++;
-    forecastHol.textContent = forecastHolInp;
-    renderMTD();
-}
-
-const decreaseHoliday = () => {
-    if (forecastHolInp <= 0) return;
-    forecastHolInp--;
-    forecastHol.textContent = forecastHolInp;
-    renderMTD();
+const setYear = () => {
+    holidayYear.textContent = `${partOne} / ${partTwo}`;
+    forecastYear.textContent = `${partOne} / ${partTwo}`;
+    expenseYear.textContent = `${partOne} / ${partTwo}`;
+    reportsYear.textContent = `${partOne} / ${partTwo}`;
+    getMonthHolidayTotal();
 }
 
 const decreaseTaxMonth = () => {
     decreaseMonth();
     forecastMonth.textContent = monthArr[monthArrIndex];
+    expenseMonth.textContent = monthArr[monthArrIndex];
+    reportsMonth.textContent = monthArr[monthArrIndex];
+    getMonthHolidayTotal();
     getMtdCalls();
 }
 
 const increaseTaxMonth = () => {
     increaseMonth();
     forecastMonth.textContent = monthArr[monthArrIndex];
+    expenseMonth.textContent = monthArr[monthArrIndex];
+    reportsMonth.textContent = monthArr[monthArrIndex];
+    getMonthHolidayTotal();
     getMtdCalls();
 }
 
@@ -123,8 +121,6 @@ const getYtdCalls = async () => {
         }
         renderYTD(); 
         getMtdCalls();
-        renderInvoice();
-        getMonthCallList();
     } catch (error) {
         console.log(error);
     }
@@ -182,7 +178,7 @@ const renderYTD = () => {
         ytdTotal += call.call_num * call.call_value;
     })
     YTD = ytdTotal / 100;
-    const workingDaysAfterHol = Math.max(0, (tWD - forecastYearHolInp));
+    const workingDaysAfterHol = Math.max(0, (tWD - yearHolidayTotal));
     const yearTotal = Math.max(0, (ytdTotal / 100));
     const yearAverage = yearTotal / Math.max(1, wDTD);
     let yearRequired;
@@ -190,14 +186,13 @@ const renderYTD = () => {
         yearRequired = 0;
     } else {
         yearRequired = Math.max(0, (66000 - yearTotal)) / Math.max(1, (workingDaysAfterHol - wDTD));
-    }
+    } 
     const yearProjection = yearAverage * workingDaysAfterHol;
     projection = yearProjection;
     yearTot.textContent = `£${Math.floor(yearTotal)}.00`;
     yearAv.textContent = `£${Math.floor(yearAverage)}.00`;
     yearReq.textContent = `£${Math.floor(yearRequired)}.00`;
     yearPro.textContent = `£${Math.floor(yearProjection)}.00`;
-    renderTax();
 }
 
 const renderMTD = () => {
@@ -205,32 +200,32 @@ const renderMTD = () => {
     forecastMonthArr.forEach((call) => {
         mtdTotal += call.call_num * call.call_value;
     })
-    const workingDaysAfterHol = Math.max(0, (mTWD - forecastHolInp));
+    const workingDaysAfterHol = Math.max(0, (mTWD - monthHolidayTotal));
     const monthTotal = Math.max(0, (mtdTotal / 100));
     const monthAverage = monthTotal / Math.max(1, mWDTD);
     const previousMonths = Math.max(0, (YTD - monthTotal));
     let monthsLeft;
     if (monthArrIndex < 3) {
-        monthsLeft = (3 - (monthArrIndex + 1)) + 1;
+        monthsLeft = (3 - (monthArrIndex));
     } else {
-        monthsLeft = ((11 - monthArrIndex) + 3) + 1;
+        monthsLeft = ((12 - monthArrIndex) + 3);
     }
     const target = Math.max(0, (Math.floor((66000 - previousMonths) / monthsLeft)));
-    let monthRequired;
+    let monthRequired = Math.max(0, (target - monthTotal)) / Math.max(1, (workingDaysAfterHol - mWDTD));
+    let monthProjection = monthAverage * workingDaysAfterHol;
     if (mTWD === mWDTD) {
         monthRequired = 0;
-    } else {
-         monthRequired = Math.max(0, (target - monthTotal)) / Math.max(1, (workingDaysAfterHol - mWDTD));
+        monthProjection = monthTotal;
     }
-    const monthProjection = monthAverage * workingDaysAfterHol;
+    
     monthTot.textContent = `£${Math.floor(monthTotal)}.00`;
     monthAv.textContent = `£${Math.floor(monthAverage)}.00`;
     monthReq.textContent = `£${Math.floor(monthRequired)}.00`;
     monthPro.textContent = `£${Math.floor(monthProjection)}.00`;    
-    renderTax();
+    getMonthExpenses();
 }
 
 export { 
-    setTaxYear, decreaseTaxYear, increaseTaxYear, increaseHoliday, decreaseHoliday, decreaseTaxMonth, increaseTaxMonth, renderYTD, renderMTD, 
-    increaseYearHoliday, decreaseYearHoliday, getYtdCalls, getMtdCalls, forecastMonthArr, projection 
+    setTaxYear, decreaseTaxYear, increaseTaxYear, decreaseTaxMonth, increaseTaxMonth, renderYTD, renderMTD, 
+    getYtdCalls, getMtdCalls, forecastMonthArr, projection 
 };

@@ -3,13 +3,13 @@ import {
     addCallType, addCallSubmitted, editCallName, editCallDate, editCallTime, editCallType, editCallSubmitted, 
     callContainer, editSubOptn, addSubOptn, callEditError, callAddError, getCallDate, confirmDeleteCont,
     addSubDate, editSubDate, unsubCont, dayTotal
-} from "./variables.js";
+} from "../variables/variables.js";
 import { 
     handleAuthError 
-} from "./headings.js";
+} from "../functions/headings.js";
 import { 
     verifyName 
-} from "./functions.js";
+} from "../functions/functions.js";
 import { 
     getYtdCalls 
 } from "./forecast.js";
@@ -18,7 +18,7 @@ import {
 } from "./reports.js";
 import { 
     handleOpenError 
-} from "./error.js";
+} from "../functions/error.js";
 
 let callList = [];
 let callTypes = [];
@@ -209,7 +209,7 @@ const handleCallAddDate = () => {
 const handleCloseCallAdd = () => {
     callCont.classList.add('hide');
     addCall.classList.add('hide');
-    addSubDate.classList.add('hide')
+    addSubDate.classList.add('hide');
     addCallType.innerHTML = '';
     addCallName.value = '';
     addCallDate.value = '';
@@ -220,6 +220,10 @@ const handleCloseCallAdd = () => {
     addCallSubmitted.classList.remove('error-input');
     addCallType.classList.remove('error-input');
     callAddError.textContent = '';
+    addCallName.removeEventListener('input', addCallNameError);
+    addCallTime.removeEventListener('input', addCallTimeError);
+    addCallType.removeEventListener('change', addCallTypeError);
+    addCallSubmitted.removeEventListener('change', addCallSubmittedError);
 }
 
 const handleCallEditSub = () => {
@@ -244,6 +248,8 @@ const handleCloseCallEdit = () => {
     editCallName.classList.remove('error-input');
     editCallTime.classList.remove('error-input');
     callEditError.textContent = '';
+    editCallName.removeEventListener('input', editCallNameError);
+    editCallTime.removeEventListener('input', editCallTimeError);
 }
 
 const handleConfirmCallDelete = () => {
@@ -288,7 +294,7 @@ const generateCalls = () => {
     const callTimeArr = [];
     if (callList.length === 0) return dayTotal.textContent = `£${dayTotalValue / 100}.00`;
     callList.forEach(call => {
-        getTime(call.call_time);
+        getTime(call.call_time);        
         const minutesEnd = (callEndHour * 60) + callEndMinute;
         const minutesStart = (callHour * 60) + callMinute;
         const callGap = minutesStart - minutesEnd;
@@ -349,7 +355,7 @@ const generateCalls = () => {
 }
 
 const generateUnsubCalls = () => {
-    unsubCont.innerHTML = '';
+    unsubCont.innerHTML = '';  
     if (unsubCallList.length === 0) return;
     unsubCallList.forEach(call => {
         getTime(call.call_time);
@@ -389,40 +395,80 @@ const generateUnsubCalls = () => {
     });
 }
 
+const addCallTimeError = () => {
+    if (Number(addCallTime.value.split(':')[0]) < 8 || Number(addCallTime.value.split(':')[0]) > 21) {
+        addCallTime.classList.add('error-input');
+        callAddError.textContent = 'Call start times must be between 08:00 and 21:00.';
+        return false;
+    } else {
+        addCallTime.classList.remove('error-input');
+        callAddError.textContent = '';
+        return true;
+    }
+}
+
+const addCallNameError = () => {
+    if (verifyName(addCallName.value.trim())) {
+        addCallName.classList.remove('error-input');
+        callAddError.textContent = '';
+        return true;
+    } else {
+        addCallName.classList.add('error-input');
+        callAddError.textContent = 'Invalid name.';
+        return false;
+    }
+}
+
+const addCallTypeError = () => {
+    if (addCallType.value) {
+        addCallType.classList.remove('error-input');
+        callAddError.textContent = '';
+        return true;
+    } else {
+        addCallType.classList.add('error-input');
+        callAddError.textContent = 'Must select call type.';
+        return false;
+    }
+}
+
+const addCallSubmittedError = () => {
+    if (addCallSubmitted.value) {
+        addCallSubmitted.classList.remove('error-input');
+        callAddError.textContent = '';
+        return true;
+    } else {
+        addCallSubmitted.classList.add('error-input');
+        callAddError.textContent = 'Must select call submitted.';
+        return false;
+    }
+}
+
 const handleAddCall = async () => {
     try {
-        if (Number(addCallTime.value.split(':')[0]) < 8 || Number(addCallTime.value.split(':')[0]) > 21) {
-            addCallTime.classList.add('error-input');
-            return callAddError.textContent = 'Call start times must be between 08:00 and 21:00.';
-        } else {
-            addCallTime.classList.remove('error-input');
-            callAddError.textContent = '';
-        }
         const call_type_id = addCallType.value;
         let call_submitted;
         const call_name = addCallName.value.trim();
         let get_submitted_date;
-        if (verifyName(call_name)) {
-            addCallName.classList.remove('error-input');
-            callAddError.textContent = '';
+        if (addCallNameError()) {
+            addCallName.removeEventListener('input', addCallNameError);
         } else {
-            addCallName.classList.add('error-input');
-            return callAddError.textContent = 'Invalid name.';
+            return addCallName.addEventListener('input', addCallNameError);
         }
-        if (addCallType.value) {
-            addCallType.classList.remove('error-input');
-            callAddError.textContent = '';
+        if (addCallTimeError()) {
+            addCallTime.removeEventListener('input', addCallTimeError);
         } else {
-            addCallType.classList.add('error-input');
-            return callAddError.textContent = 'Must select call type.';
+            return addCallTime.addEventListener('input', addCallTimeError);
         }
-        if (addCallSubmitted.value) {
-            addCallSubmitted.classList.remove('error-input');
-            callAddError.textContent = '';
+        if (addCallTypeError()) {
+            addCallType.removeEventListener('change', addCallTypeError);
         } else {
-            addCallSubmitted.classList.add('error-input');
-            return callAddError.textContent = 'Must select call submitted.';
-        }        
+            return addCallType.addEventListener('change', addCallTypeError);
+        }
+        if (addCallSubmittedError()) {
+            addCallSubmitted.removeEventListener('change', addCallSubmittedError);
+        } else {
+            return addCallSubmitted.addEventListener('change', addCallSubmittedError);
+        }
         if (addCallSubmitted.value === 'true') {
             call_submitted = true;
             get_submitted_date = new Date(`${addSubDate.value} ${addCallTime.value}`);
@@ -461,19 +507,46 @@ const handleAddCall = async () => {
     }
 }
 
+const editCallTimeError = () => {
+    if (Number(editCallTime.value.split(':')[0]) < 8 || Number(editCallTime.value.split(':')[0]) > 21) {
+        editCallTime.classList.add('error-input');
+        callEditError.textContent = 'Call start times must be between 08:00 and 21:00.';
+        return false;
+    } else {
+        editCallTime.classList.remove('error-input');
+        callEditError.textContent = '';
+        return true;
+    }
+}
+
+const editCallNameError = () => {
+    if (verifyName(editCallName.value.trim())) {
+        editCallName.classList.remove('error-input');
+        callEditError.textContent = '';
+        return true;
+    } else {
+        editCallName.classList.add('error-input');
+        callEditError.textContent = 'Invalid name.';
+        return false;
+    }
+}
+
 const handleUpdateCall = async () => {
     try {
-        if (Number(editCallTime.value.split(':')[0]) < 8 || Number(editCallTime.value.split(':')[0]) > 21) {
-            editCallTime.classList.add('error-input');
-            return callEditError.textContent = 'Call start times must be between 08:00 and 21:00.';
-        } else {
-            editCallTime.classList.remove('error-input');
-            callEditError.textContent = '';
-        }
         const id = currentCallId;
         const call_type_id = editCallType.value;
         let call_submitted;
         let get_submitted_date;
+        if (editCallNameError()) {
+            editCallName.removeEventListener('input', editCallNameError);
+        } else {
+            return editCallName.addEventListener('input', editCallNameError);
+        }
+        if (editCallTimeError()) {
+            editCallTime.removeEventListener('input', editCallTimeError);
+        } else {
+            return editCallTime.addEventListener('input', editCallTimeError);
+        }
         if (editCallSubmitted.value === 'true') {
             call_submitted = true;
             get_submitted_date = new Date(`${editSubDate.value} ${editCallTime.value}`);
@@ -585,5 +658,5 @@ const getTodaysCalls = async () => {
 export { 
     callList, callTypes, handleOpenCallAdd, handleCloseCallAdd, handleCloseCallEdit, handleUpdateCall, handleAddCall, getTodaysCalls, 
     handleCallDelete, decreaseDate, increaseDate, getCallsByDate, handleCancelCallDelete, handleConfirmCallDelete, getCallTypes, 
-    handleCallAddSub, handleCallEditSub, handleCallEditDate, handleCallAddDate, currentTime, displayDate, getTime, generateUnsubCalls
+    handleCallAddSub, handleCallEditSub, handleCallEditDate, handleCallAddDate, currentDate, currentTime, displayDate, getTime, generateUnsubCalls
 }

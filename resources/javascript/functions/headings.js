@@ -1,6 +1,6 @@
 import { 
-    hdDisplay, bdDisplay, hdCont, loginError, loginCont, cardDisplay
-} from "./variables.js";
+    hdDisplay, bdDisplay, hdCont, loginError, loginCont, cardDisplay, logoutCont
+} from "../variables/variables.js";
 
 const switchTab = (e) => {
     const id = e.target.id;
@@ -27,6 +27,7 @@ const handleAuthError = () => {
         bdDisplay[i].classList.add('hide');
     }
     hdCont.classList.add('hide');
+    logoutCont.classList.add('hide');
     loginError.textContent = '';
     loginCont.classList.remove('hide');
     cardDisplay.classList.remove('hide');

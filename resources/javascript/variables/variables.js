@@ -1,4 +1,4 @@
-const siteUrl = 'http://localhost:3000';
+const siteUrl = 'https://server.daily-planner.uk';
 const cardDisplay = document.getElementById('card-display');
 const loginCont = document.getElementById('login-cont');
 const loginEmail = document.getElementById('login-email');

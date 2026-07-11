@@ -21,7 +21,7 @@ import {
     getMonthExpenses
 } from "./expense.js";
 import { 
-    yearHolidayTotal, getYearHoliday, getHolidayDays, getMonthHolidayTotal, monthHolidayTotal
+    yearHolidayTotal, getYearHoliday, getHolidayDays, getMonthHolidayTotal, monthHolidayTotal, monthHolidayToDate, yearHolidayToDate
 } from "./user.js";
 
 let forecastHolInp = 0;
@@ -59,7 +59,6 @@ const setYear = () => {
     forecastYear.textContent = `${partOne} / ${partTwo}`;
     expenseYear.textContent = `${partOne} / ${partTwo}`;
     reportsYear.textContent = `${partOne} / ${partTwo}`;
-    getMonthHolidayTotal();
 }
 
 const decreaseTaxMonth = () => {
@@ -180,7 +179,7 @@ const renderYTD = () => {
     YTD = ytdTotal / 100;
     const workingDaysAfterHol = Math.max(0, (tWD - yearHolidayTotal));
     const yearTotal = Math.max(0, (ytdTotal / 100));
-    const yearAverage = yearTotal / Math.max(1, wDTD);
+    const yearAverage = yearTotal / Math.max(1, wDTD - yearHolidayToDate);
     let yearRequired;
     if (tWD === wDTD) {
         yearRequired = 0;
@@ -202,7 +201,7 @@ const renderMTD = () => {
     })
     const workingDaysAfterHol = Math.max(0, (mTWD - monthHolidayTotal));
     const monthTotal = Math.max(0, (mtdTotal / 100));
-    const monthAverage = monthTotal / Math.max(1, mWDTD);
+    const monthAverage = monthTotal / Math.max(1, mWDTD - monthHolidayToDate);
     const previousMonths = Math.max(0, (YTD - monthTotal));
     let monthsLeft;
     if (monthArrIndex < 3) {
@@ -211,7 +210,7 @@ const renderMTD = () => {
         monthsLeft = ((12 - monthArrIndex) + 3);
     }
     const target = Math.max(0, (Math.floor((66000 - previousMonths) / monthsLeft)));
-    let monthRequired = Math.max(0, (target - monthTotal)) / Math.max(1, (workingDaysAfterHol - mWDTD));
+    let monthRequired = Math.max(0, (target - monthTotal)) / Math.max(1, (workingDaysAfterHol - (mWDTD - monthHolidayToDate)));
     let monthProjection = monthAverage * workingDaysAfterHol;
     if (mTWD === mWDTD) {
         monthRequired = 0;

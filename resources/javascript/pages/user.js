@@ -34,6 +34,8 @@ let welcomeMsg;
 let yearHolidayObj;
 let yearHolidayTotal = 25;
 let monthHolidayTotal = 0;
+let monthHolidayToDate = 0;
+let yearHolidayToDate = 0;
 let currentHolidayId = '';
 let previousHolidayDate = '';
 let holidayDaysArr = [];
@@ -92,17 +94,14 @@ const updateWelcomeMsg = () => {
 
     let morningTimeout = setTimeout(() => {
         welcomeMorning();
-        console.log('morning timeout' + new Date())
         let morningInterval = setInterval(welcomeMorning, 86400000);
     }, delayMsMidnight);
     let afternoonTimeout = setTimeout(() => {
         welcomeAfternoon();
-        console.log('afternoon timeout' + new Date())
         let afternoonInterval = setInterval(welcomeAfternoon, 86400000);
     }, delayMsMidday);
     let eveningTimeout = setTimeout(() => {
         welcomeEvening();
-        console.log('evening timeout' + new Date())
         let eveningInterval = setInterval(welcomeEvening, 86400000);
     }, delayMsSix);
 }
@@ -201,7 +200,7 @@ const getUser = async () => {
                 loginEmail.removeEventListener('keyup', handleLoginEnter);
                 loginPassword.removeEventListener('keyup', handleLoginEnter);
                 for (let i = 0; i < bdDisplay.length; i++) {
-                    if (bdDisplay[i].id === 'reports-bd') bdDisplay[i].classList.remove('hide');
+                    if (bdDisplay[i].id === 'account-bd') bdDisplay[i].classList.remove('hide');
                 }
                 logoutCont.classList.remove('hide');
                 userProfile = jsonData;
@@ -613,9 +612,34 @@ const getHolidayDays = async () => {
 
 const getMonthHolidayTotal = () => {
     monthHolidayTotal = 0;
+    monthHolidayToDate = 0;
+    yearHolidayToDate = 0;
+    const today = new Date();
     holidayDaysArr.forEach(day => {
         const date = new Date(day.holiday_date);
-        if (monthArrIndex === date.getMonth()) monthHolidayTotal ++;
+        if (today.getFullYear() === partOne && today.getMonth() > 2 || today.getFullYear() === partTwo && today.getMonth() < 3) {
+            if (date.getMonth() === today.getMonth() && date.getDate() <= today.getDate()) yearHolidayToDate ++;
+            if (today.getFullYear() === partOne) {
+                if (date.getMonth() > 2 && date.getMonth() < today.getMonth()) {
+                    yearHolidayToDate ++;
+                }
+            }
+            if (today.getFullYear() === partTwo) {
+                if (date.getFullYear() === partOne) yearHolidayToDate ++;
+                if (date.getMonth() < today.getMonth()) {
+                    yearHolidayToDate ++;
+                }
+            }
+        } else {
+            yearHolidayToDate = holidayDaysArr.length;
+        }
+        if (monthArrIndex === date.getMonth()) {
+            monthHolidayTotal ++;
+            if (monthArrIndex === today.getMonth() && date.getDate() <= today.getDate()) monthHolidayToDate ++;
+        }
+        if (date.getMonth() > monthArrIndex) {
+            yearHolidayToDate ++;
+        }
     });
     forecastHol.textContent = monthHolidayTotal;
     renderMTD();
@@ -764,5 +788,6 @@ export {
     handleClosePassword, handleOpenPassword, updatePassword, handleLogout, loggedIn, handleShowPassword, 
     handleLoginEnter, updateWelcomeMsg, getYearHoliday, yearHolidayTotal, increaseYearHoliday, decreaseYearHoliday, 
     getHolidayDays, monthHolidayTotal, getMonthHolidayTotal, handleOpenHolidayAdd, handleCloseHolidayAdd, handleAddHoliday, 
-    handleEditHoliday, handleCloseHolidayEdit, handleConfirmHolidayDelete, handleCancelHolidayDelete, handleHolidayDelete 
+    handleEditHoliday, handleCloseHolidayEdit, handleConfirmHolidayDelete, handleCancelHolidayDelete, handleHolidayDelete, 
+    monthHolidayToDate, yearHolidayToDate 
 }

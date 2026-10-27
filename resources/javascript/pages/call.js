@@ -313,9 +313,21 @@ const generateCalls = () => {
         const namePara = document.createElement('span');
         namePara.textContent = call.call_name;
         const timePara = document.createElement('span');
-        timePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' || call.call_type_id === 'f5ecf514-6217-4ddf-845a-3ab85a829300' ? `${currentTime} - ${timePlusHalf}` : `${currentTime} - ${timePlusOne}`;
+        timePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' || call.call_type_id === 'f5ecf514-6217-4ddf-845a-3ab85a829300' || call.call_type_id === 'de330fd1-228d-450b-9a0a-c11188e40324' || call.call_type_id === '39788f5a-367f-4965-bd43-fb8cabac997b' || call.call_type_id === '287c6478-5e00-42c2-9a9d-5ba1433eaaa9'  ? `${currentTime} - ${timePlusHalf}` : `${currentTime} - ${timePlusOne}`;
         const typePara = document.createElement('span');
-        typePara.textContent = call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' ? 'AAHR' : call.call_type;
+        let typeName = '';
+        if (call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32') {
+            typeName = 'AAHR';
+        } else if (call.call_type_id === 'de330fd1-228d-450b-9a0a-c11188e40324') {
+            typeName = 'AAHR NI';
+        } else if (call.call_type_id === '39788f5a-367f-4965-bd43-fb8cabac997b') {
+            typeName = 'AAHR DT';
+        } /*else if (call.call_type_id === '287c6478-5e00-42c2-9a9d-5ba1433eaaa9') {
+            typeName = 'Training';
+        } */else {
+            typeName = call.call_type;
+        }
+        typePara.textContent = typeName;
         callDiv.addEventListener('click', () => {
             previousCalltime = call.call_time;
             previousCallType = call.call_type_id;
@@ -336,7 +348,7 @@ const generateCalls = () => {
             callCont.classList.remove('hide');
             editCall.classList.remove('hide');
         })
-        if (call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' || call.call_type_id === 'f5ecf514-6217-4ddf-845a-3ab85a829300') {
+        if (call.call_type_id === 'f9388117-e204-4d47-87d2-96f97ab4ad32' || call.call_type_id === 'f5ecf514-6217-4ddf-845a-3ab85a829300' || call.call_type_id === 'de330fd1-228d-450b-9a0a-c11188e40324' || call.call_type_id === '39788f5a-367f-4965-bd43-fb8cabac997b' || call.call_type_id === '287c6478-5e00-42c2-9a9d-5ba1433eaaa9') {
             callDiv.style.height = '60px';
             const timeTypeDiv = document.createElement('div');
             timePara.style.marginRight = '8px';

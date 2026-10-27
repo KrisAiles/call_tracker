@@ -48,7 +48,8 @@ const generatePdf = (viewDownload) => {
         { header: 'Date', dataKey: 'call_date' }, 
         { header: 'Time', dataKey: 'call_time' }, 
         { header: 'Name', dataKey: 'call_name' },
-        { header: 'Type', dataKey: 'call_type' }
+        { header: 'Type', dataKey: 'call_type' }, 
+        { header: 'Value', dataKey: 'call_value' }
     ]
 
     const callListBody = [];
@@ -59,7 +60,8 @@ const generatePdf = (viewDownload) => {
                 call_date: displayDate, 
                 call_time: currentTime, 
                 call_name: call.call_name, 
-                call_type: call.call_type
+                call_type: call.call_type,
+                call_value: `£${call.call_value / 100}.00`
             }
             callListBody.push(callData);
         })
